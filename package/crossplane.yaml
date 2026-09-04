@@ -7,7 +7,7 @@ metadata:
     meta.crossplane.io/source: "https://github.com/Arubacloud/provider-arubacloud"
     meta.crossplane.io/license: "Apache-2.0"
     meta.crossplane.io/description: "A Crossplane provider for managing ArubaCloud resources."
-    meta.crossplane.io/iconData: "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgcng9IjIwIiBmaWxsPSIjZTMwNjEzIi8+CiAgPHRleHQgeD0iMTAwIiB5PSIxNDAiIGZvbnQtZmFtaWx5PSJBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMTAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjZmZmZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5BQzwvdGV4dD4KPC9zdmc+Cg=="
+    meta.crossplane.io/iconData: "iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAIAAAAiOjnJAAABeElEQVR42u3SMQ0AAAgEsZ8wgH91GMEEA0OTKrhcphrORQKMhbEwFhgLY2EsMBbGwlhgLIyFscBYGAtjgbEwFsYCY2EsjAXGwlgYC4yFsTAWGAtjYSwwFsbCWGAsjIWxwFgYC2OBsTAWxgJjYSyMBcbCWBgLjIWxMBYYC2NhLDAWxsJYYCyMhbHAWBgLY4GxMBbGAmNhLIwFxsJYGAuMhbEwFhgLY2EsMBbGwlhgLIyFscBYGAtjYSwVMBbGwlhgLIyFscBYGAtjgbEwFsYCY2EsjAXGwlgYC4yFsTAWGAtjYSwwFsbCWGAsjIWxwFgYC2OBsTAWxgJjYSyMBcbCWBgLjIWxMBYYC2NhLDAWxsJYYCyMhbHAWBgLY4GxMBbGAmNhLIwFxsJYGAuMhbEwFhgLY2EsMBbGwlhgLIyFscBYGAtjgbEwFsbCWCpgLIyFscBYGAtjgbEwFsYCY2EsjAXGwlgYC4yFsTAWGAtjYSwwFsbCWGAsvlmLm9f44j2aMAAAAABJRU5ErkJggg=="
     meta.crossplane.io/readme: |
       # provider-arubacloud
 
@@ -40,7 +40,7 @@ metadata:
       metadata:
         name: provider-arubacloud
       spec:
-        package: xpkg.upbound.io/arubacloud/provider-arubacloud:v0.0.1
+        package: xpkg.upbound.io/arubacloud/provider-arubacloud:v0.0.2
       ```
 
       ### Configure credentials
