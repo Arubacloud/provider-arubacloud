@@ -61,7 +61,7 @@ jobs:
 
       - name: Install up CLI
         run: |
-          curl -fsSLo up https://cli.upbound.io/stable/current/bin/linux_amd64/up
+          curl -fsSLo up https://cli.upbound.io/stable/v0.39.0/bin/linux_amd64/up
           chmod +x up
           sudo mv up /usr/local/bin/
           up version
