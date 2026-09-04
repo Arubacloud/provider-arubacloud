@@ -14,14 +14,22 @@ metadata:
       ## Features
 
       - **Terraform-based** — generated from the official ArubaCloud Terraform provider via Upjet, keeping parity with the Terraform resource model
-      - **Namespace-scoped** — follows Crossplane v2 conventions; all resources live in `crossplane-system` (or any namespace you choose)
-      - **Full reference resolution** — cross-resource references (VPC → Subnet → SecurityGroup, etc.) resolved automatically by Crossplane
+      - **Namespace-scoped** — follows Crossplane v2 conventions; all resources live in `crossplane-system`
+      - **Full reference resolution** — cross-resource references (VPC → Subnet → SecurityGroup, etc.) resolved automatically
       - **Connection secrets** — sensitive outputs (kubeconfig, public IP, …) written to Kubernetes secrets
       - **Management policies** — supports Observe, Create, Update, Delete and combinations thereof
 
-      ## Getting Started
+      ## Quick Start
 
-      Install the provider:
+      ### 1. Install Crossplane
+
+      ```bash
+      helm repo add crossplane-stable https://charts.crossplane.io/stable
+      helm install crossplane crossplane-stable/crossplane \
+        --namespace crossplane-system --create-namespace
+      ```
+
+      ### 2. Install the provider
 
       ```yaml
       apiVersion: pkg.crossplane.io/v1
@@ -32,7 +40,22 @@ metadata:
         package: xpkg.upbound.io/arubacloud/provider-arubacloud:v0.0.4
       ```
 
-      Create an API credentials secret and configure the provider:
+      Wait until the provider is healthy:
+
+      ```bash
+      kubectl wait provider/provider-arubacloud \
+        --for=condition=Healthy --timeout=5m
+      ```
+
+      ### 3. Create the credentials secret
+
+      ```bash
+      kubectl create secret generic arubacloud-credentials \
+        --namespace crossplane-system \
+        --from-literal=credentials='{"client_id":"YOUR_CLIENT_ID","client_secret":"YOUR_CLIENT_SECRET"}'
+      ```
+
+      ### 4. Configure the provider
 
       ```yaml
       apiVersion: arubacloud.crossplane.io/v1beta1
@@ -49,7 +72,184 @@ metadata:
             key: credentials
       ```
 
-      Full documentation, examples and import guides are available in the [GitHub repository](https://github.com/Arubacloud/provider-arubacloud). If you encounter an issue please open one there.
+      ### 5. Create a Project
+
+      Every ArubaCloud resource belongs to a project. Create one first:
+
+      ```yaml
+      apiVersion: arubacloud.crossplane.io/v1alpha1
+      kind: Project
+      metadata:
+        name: my-project
+        namespace: crossplane-system
+      spec:
+        forProvider:
+          name: my-project
+          description: "Managed by Crossplane"
+          tags: [crossplane]
+        providerConfigRef:
+          name: default
+      ```
+
+      ### 6. Create a network
+
+      ```yaml
+      apiVersion: arubacloud.crossplane.io/v1alpha1
+      kind: VPC
+      metadata:
+        name: main-vpc
+        namespace: crossplane-system
+      spec:
+        forProvider:
+          name: main-vpc
+          location: ITBG-Bergamo
+          tags: [crossplane]
+          projectIdRef:
+            name: my-project
+        providerConfigRef:
+          name: default
+      ---
+      apiVersion: arubacloud.crossplane.io/v1alpha1
+      kind: Subnet
+      metadata:
+        name: private-subnet
+        namespace: crossplane-system
+      spec:
+        forProvider:
+          name: private-subnet
+          location: ITBG-Bergamo
+          type: Basic
+          tags: [crossplane]
+          projectIdRef:
+            name: my-project
+          vpcIdRef:
+            name: main-vpc
+        providerConfigRef:
+          name: default
+      ---
+      apiVersion: arubacloud.crossplane.io/v1alpha1
+      kind: Securitygroup
+      metadata:
+        name: web-sg
+        namespace: crossplane-system
+      spec:
+        forProvider:
+          name: web-sg
+          location: ITBG-Bergamo
+          tags: [crossplane]
+          projectIdRef:
+            name: my-project
+          vpcIdRef:
+            name: main-vpc
+        providerConfigRef:
+          name: default
+      ```
+
+      ### 7. Create a cloud server
+
+      First upload your SSH key and create a boot volume, then launch the server:
+
+      ```bash
+      # Upload SSH public key as a secret
+      kubectl create secret generic my-keypair-pub \
+        --namespace crossplane-system \
+        --from-literal=value="$(cat ~/.ssh/id_ed25519.pub)"
+      ```
+
+      ```yaml
+      apiVersion: arubacloud.crossplane.io/v1alpha1
+      kind: Keypair
+      metadata:
+        name: my-keypair
+        namespace: crossplane-system
+      spec:
+        forProvider:
+          name: my-keypair
+          location: ITBG-Bergamo
+          projectIdRef:
+            name: my-project
+          valueSecretRef:
+            name: my-keypair-pub
+            namespace: crossplane-system
+            key: value
+        providerConfigRef:
+          name: default
+      ---
+      apiVersion: arubacloud.crossplane.io/v1alpha1
+      kind: Blockstorage
+      metadata:
+        name: boot-vol
+        namespace: crossplane-system
+      spec:
+        forProvider:
+          name: boot-vol
+          location: ITBG-Bergamo
+          zone: ITBG-1
+          sizeGb: 100
+          billingPeriod: Hour
+          type: Performance
+          bootable: true
+          image: LU22-001
+          projectIdRef:
+            name: my-project
+        providerConfigRef:
+          name: default
+      ---
+      apiVersion: arubacloud.crossplane.io/v1alpha1
+      kind: Elasticip
+      metadata:
+        name: web-eip
+        namespace: crossplane-system
+      spec:
+        forProvider:
+          name: web-eip
+          location: ITBG-Bergamo
+          billingPeriod: Hour
+          projectIdRef:
+            name: my-project
+        writeConnectionSecretToRef:
+          name: web-eip-address
+          namespace: crossplane-system
+        providerConfigRef:
+          name: default
+      ---
+      apiVersion: arubacloud.crossplane.io/v1alpha1
+      kind: Cloudserver
+      metadata:
+        name: web-01
+        namespace: crossplane-system
+      spec:
+        forProvider:
+          name: web-01
+          location: ITBG-Bergamo
+          zone: ITBG-1
+          projectIdRef:
+            name: my-project
+          network:
+            vpcUriRefRef:
+              name: main-vpc
+            subnetUriRefsRefs:
+              - name: private-subnet
+            securitygroupUriRefsRefs:
+              - name: web-sg
+            elasticIpUriRefRef:
+              name: web-eip
+          settings:
+            flavorName: CSO4A8
+            keyPairUriRefRef:
+              name: my-keypair
+          storage:
+            bootVolumeUriRefRef:
+              name: boot-vol
+        providerConfigRef:
+          name: default
+      ```
+
+      Crossplane resolves all cross-resource references automatically — `main-vpc` is looked up by name and its URI injected into the CloudServer spec.
+
+      ## More Resources
+
+      Complete manifests for all 25 resources (KaaS, DBaaS, ContainerRegistry, VPN, …) and an import guide are available in the [GitHub repository](https://github.com/Arubacloud/provider-arubacloud). If you encounter an issue please open one there.
 spec:
   capabilities:
     - SafeList
