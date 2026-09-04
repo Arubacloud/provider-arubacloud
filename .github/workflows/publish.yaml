@@ -61,7 +61,8 @@ jobs:
 
       - name: Install up CLI
         run: |
-          curl -fsSL "https://cli.upbound.io" | sh
+          curl -fsSLo up https://cli.upbound.io/stable/current/bin/linux_amd64/up
+          chmod +x up
           sudo mv up /usr/local/bin/
 
       - name: Vendor Dependencies
