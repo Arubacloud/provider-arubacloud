@@ -64,6 +64,7 @@ jobs:
           curl -fsSLo up https://cli.upbound.io/stable/current/bin/linux_amd64/up
           chmod +x up
           sudo mv up /usr/local/bin/
+          up version
 
       - name: Vendor Dependencies
         run: make vendor
@@ -73,6 +74,9 @@ jobs:
 
       - name: Append Extensions (icon)
         run: |
+          up login \
+            --username="${{ secrets.UPBOUND_MARKETPLACE_PUSH_ROBOT_USR }}" \
+            --password="${{ secrets.UPBOUND_MARKETPLACE_PUSH_ROBOT_PSW }}"
           up alpha xpkg append \
             --extensions-root=./extensions \
             xpkg.upbound.io/arubacloud/provider-arubacloud:${{ env.VERSION }}
