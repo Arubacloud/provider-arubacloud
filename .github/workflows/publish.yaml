@@ -73,10 +73,20 @@ jobs:
         run: make build.all publish.artifacts
 
       - name: Append Extensions (icon)
+        continue-on-error: true
         run: |
+          echo "=== up version ==="
+          up version
+          echo "=== available xpkg subcommands ==="
+          up xpkg --help 2>&1 || true
+          echo "=== attempting login ==="
           up login \
             --username="${{ secrets.UPBOUND_MARKETPLACE_PUSH_ROBOT_USR }}" \
-            --password="${{ secrets.UPBOUND_MARKETPLACE_PUSH_ROBOT_PSW }}"
+            --password="${{ secrets.UPBOUND_MARKETPLACE_PUSH_ROBOT_PSW }}" || \
+          up login \
+            --token="${{ secrets.UPBOUND_MARKETPLACE_PUSH_ROBOT_PSW }}" || \
+          echo "WARNING: up login failed, attempting append with Docker creds"
+          echo "=== appending icon ==="
           up alpha xpkg append \
             --extensions-root=./extensions \
             xpkg.upbound.io/arubacloud/provider-arubacloud:${{ env.VERSION }}
