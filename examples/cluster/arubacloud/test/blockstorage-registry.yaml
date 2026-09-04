@@ -1,0 +1,18 @@
+apiVersion: arubacloud.crossplane.io/v1alpha1
+kind: Blockstorage
+metadata:
+  name: registry-vol
+spec:
+  forProvider:
+    name: registry-vol
+    location: ITBG-Bergamo
+    sizeGb: 100
+    billingPeriod: Hour
+    zone: ITBG-1
+    type: Standard
+    tags:
+      - crossplane
+    projectIdRef:
+      name: my-project
+  providerConfigRef:
+    name: default

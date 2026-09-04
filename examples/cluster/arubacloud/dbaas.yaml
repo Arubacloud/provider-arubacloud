@@ -1,0 +1,29 @@
+apiVersion: arubacloud.crossplane.io/v1alpha1
+kind: Dbaas
+metadata:
+  name: my-db-cluster
+  namespace: crossplane-system
+spec:
+  forProvider:
+    name: my-db-cluster
+    location: ITBG-Bergamo
+    zone: ITBG-1
+    engineId: mysql-8.0
+    flavor: DBO2A4
+    billingPeriod: Hour
+    tags:
+      - crossplane
+    projectIdRef:
+      name: my-project
+    network:
+      vpcUriRefRef:
+        name: main-vpc
+      subnetUriRefRef:
+        name: private-subnet
+      securityGroupUriRefRef:
+        name: web-sg
+      # elasticIpUriRefRef is optional - omit for private-only access
+    storage:
+      sizeGb: 20
+  providerConfigRef:
+    name: default

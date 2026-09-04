@@ -1,0 +1,1428 @@
+name: arubacloud/arubacloud
+resources:
+    Acceptance Testing - ArubaCloud Provider Development:
+        subCategory: Development
+        description: How to run acceptance tests for the ArubaCloud Terraform provider, including required environment variables and CI setup.
+        name: Acceptance Testing - ArubaCloud Provider Development
+        title: Acceptance Testing - ArubaCloud Provider Development
+        argumentDocs:
+            ARUBACLOUD_PROJECT_ID: )
+            PATH: (acceptance tests drive whichever binary you point them at)
+            terraform: binary.
+            tofu: binary.
+        importStatements: []
+    ArubaCloud:
+        subCategory: ""
+        description: The ArubaCloud Terraform provider manages compute, network, storage, database, container, and security resources on the ArubaCloud platform.
+        name: ArubaCloud
+        title: ArubaCloud
+        argumentDocs:
+            VAR=value command: prefix form only applies to the command on that line. Setting them on a blank line is a no-op. Use a single-line invocation (TF_LOG=DEBUG terraform plan) or export TF_LOG=DEBUG first.
+            base_url: '- (Optional, string) Override the ArubaCloud API base URL. Advanced use only.'
+            client_id: '- (Required, string) ArubaCloud OAuth2 client ID. Can also be specified with the ARUBACLOUD_CLIENT_ID environment variable.'
+            client_secret: '- (Required, string) ArubaCloud OAuth2 client secret. Can also be specified with the ARUBACLOUD_CLIENT_SECRET environment variable.'
+            log_level: '- (Optional, string) SDK log level for HTTP request/response tracing. Accepted values (case-insensitive): OFF, ERROR, WARN, INFO, DEBUG, TRACE. Default: OFF. Can also be set via the ARUBACLOUD_LOG_LEVEL environment variable; the HCL attribute takes precedence.'
+            log_level = "DEBUG": set but no output appears
+            log_level = "OFF": (the default) or omit it. Provider-level tflog calls (resource lifecycle events, wait/retry status) are unaffected by log_level and continue to respect TF_LOG alone.
+            resource_timeout: '- (Optional, string) Timeout for waiting for resources to become active after creation (e.g. "15m", "45m"). Default: "30m".'
+            terraform: run on the next
+            token_issuer_url: '- (Optional, string) Override the ArubaCloud token issuer URL. Advanced use only.'
+        importStatements: []
+    Upgrading to v0.2.0 - ArubaCloud Provider:
+        subCategory: Guides
+        description: How to upgrade from ArubaCloud provider v0.1.x to v0.2.0, including authentication rename and expected state behaviour.
+        name: Upgrading to v0.2.0 - ArubaCloud Provider
+        title: Upgrading to v0.2.0 - ArubaCloud Provider
+        argumentDocs: {}
+        importStatements: []
+    arubacloud_backup:
+        subCategory: Storage
+        description: Manages an ArubaCloud Block Storage Backup.
+        name: arubacloud_backup
+        title: arubacloud_backup Resource - ArubaCloud
+        examples:
+            - name: basic
+              manifest: |-
+                {
+                  "billing_period": "monthly",
+                  "location": "ITBG-Bergamo",
+                  "name": "example-backup",
+                  "project_id": "project-123",
+                  "retention_days": 30,
+                  "tags": [
+                    "env:dev",
+                    "service:demo"
+                  ],
+                  "type": "full",
+                  "volume_id": "volume-123"
+                }
+        argumentDocs:
+            billing_period: '(String) Billing cycle. Accepted values: Hour, Month, Year.'
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            name: (String) Display name for the backup.
+            project_id: (String) ID of the project that owns this resource. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            retention_days: (Number) Number of days to retain the backup before automatic deletion. Optional — if omitted, the backup is retained indefinitely. (Immutable — changing this value forces the resource to be destroyed and re-created, because the API does not apply retention_days changes in update requests.)
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            type: '(String) Backup type. Accepted values: Full, Incremental. (Immutable — changing this value forces the resource to be destroyed and re-created.)'
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+            volume_id: (String) ID of the block storage volume to back up. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+        importStatements:
+            - terraform import arubacloud_backup.example <backup-id>
+    arubacloud_backup Data Source - ArubaCloud:
+        subCategory: Storage
+        description: Retrieves information about an existing ArubaCloud Block Storage Backup.
+        name: arubacloud_backup Data Source - ArubaCloud
+        title: arubacloud_backup Data Source - ArubaCloud
+        argumentDocs:
+            billing_period: '(String) Billing cycle. Accepted values: Hour, Month, Year.'
+            id: (String) Unique identifier of the backup to look up.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the backup.
+            project_id: (String) ID of the project that owns this resource.
+            retention_days: (Number) Number of days to retain the backup before automatic deletion. Optional — if omitted, the backup is retained indefinitely.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            type: '(String) Backup type. Accepted values: Full, Incremental.'
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+            volume_id: (String) ID of the block storage volume this backup was taken from.
+        importStatements: []
+    arubacloud_blockstorage:
+        subCategory: Storage
+        description: Manages an ArubaCloud Block Storage volume.
+        name: arubacloud_blockstorage
+        title: arubacloud_blockstorage Resource - ArubaCloud
+        examples:
+            - name: zonal_example
+              manifest: |-
+                {
+                  "billing_period": "Hour",
+                  "location": "ITBG-Bergamo",
+                  "name": "zonal-blockstorage",
+                  "project_id": "your-project-id",
+                  "size_gb": 100,
+                  "tags": [
+                    "storage",
+                    "zonal",
+                    "test"
+                  ],
+                  "type": "Standard",
+                  "zone": "ITBG-1"
+                }
+            - name: regional_example
+              manifest: |-
+                {
+                  "billing_period": "Hour",
+                  "location": "ITBG-Bergamo",
+                  "name": "regional-blockstorage",
+                  "project_id": "your-project-id",
+                  "size_gb": 100,
+                  "tags": [
+                    "storage",
+                    "regional",
+                    "test"
+                  ],
+                  "type": "Standard"
+                }
+        argumentDocs:
+            billing_period: '(String) Billing cycle. Accepted values: Hour, Month, Year.'
+            bootable: (Boolean) Whether this volume can be used as a boot volume for an arubacloud_cloudserver. Must be true when image is set.
+            id: (String) Computed by the API. Unique identifier for the resource.
+            image: (String) Image ID to use when creating a bootable volume. Required when bootable is true. See the available images.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            name: (String) Display name for the block storage volume.
+            project_id: (String) ID of the project that owns this resource. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            size_gb: (Number) Size of the block storage volume in GiB. Must be a positive integer.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            type: '(String) Storage type. Accepted values: Standard, Performance. (Immutable — changing this value forces the resource to be destroyed and re-created.)'
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+            zone: (String) Availability zone within the region. If omitted the volume is regional (accessible across all zones).
+        importStatements:
+            - terraform import arubacloud_blockstorage.example <blockstorage-id>
+    arubacloud_blockstorage Data Source - ArubaCloud:
+        subCategory: Storage
+        description: Retrieves information about an existing ArubaCloud Block Storage volume.
+        name: arubacloud_blockstorage Data Source - ArubaCloud
+        title: arubacloud_blockstorage Data Source - ArubaCloud
+        argumentDocs:
+            billing_period: '(String) Billing cycle. Accepted values: Hour, Month, Year.'
+            bootable: (Boolean) Whether this volume can be used as a boot volume for an arubacloud_cloudserver. Must be true when image is set.
+            id: (String) Unique identifier of the block storage volume to look up.
+            image: (String) Image ID to use when creating a bootable volume. Required when bootable is true. See the available images.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the block storage volume.
+            project_id: (String) ID of the project that owns this resource.
+            size_gb: (Number) Size of the block storage volume in GiB. Must be a positive integer.
+            snapshot_id: (String) ID of the snapshot this volume was created from, if any.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            type: '(String) Storage type. Accepted values: Standard, Performance.'
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+            zone: (String) Availability zone within the region. If omitted the volume is regional (accessible across all zones).
+        importStatements: []
+    arubacloud_cloudserver:
+        subCategory: Compute
+        description: Manages an ArubaCloud CloudServer virtual machine.
+        name: arubacloud_cloudserver
+        title: arubacloud_cloudserver Resource - ArubaCloud
+        examples:
+            - name: basic
+              manifest: |-
+                {
+                  "location": "ITBG-Bergamo",
+                  "name": "example-cloudserver",
+                  "network": {
+                    "elastic_ip_uri_ref": "${arubacloud_elasticip.example.uri}",
+                    "securitygroup_uri_refs": [
+                      "${arubacloud_securitygroup.example.uri}"
+                    ],
+                    "subnet_uri_refs": [
+                      "${arubacloud_subnet.example.uri}"
+                    ],
+                    "vpc_uri_ref": "${arubacloud_vpc.example.uri}"
+                  },
+                  "project_id": "${arubacloud_project.example.id}",
+                  "settings": {
+                    "flavor_name": "CSO4A8",
+                    "key_pair_uri_ref": "${arubacloud_keypair.example.uri}"
+                  },
+                  "storage": {
+                    "boot_volume_uri_ref": "${arubacloud_blockstorage.example.uri}"
+                  },
+                  "tags": [
+                    "compute",
+                    "example"
+                  ],
+                  "zone": "ITBG-1"
+                }
+              references:
+                project_id: arubacloud_project.example.id
+        argumentDocs:
+            boot_volume_uri_ref: (String) URI of the bootable block storage volume. Reference the uri attribute of an arubacloud_blockstorage resource (must be bootable). Changing this value forces a new resource.
+            elastic_ip_uri_ref: (String) URI of an Elastic IP to associate with this CloudServer. Reference the uri attribute of an arubacloud_elasticip resource. Optional — omit to use a dynamic IP. Changing this value forces a new resource.
+            flavor_name: (String) Compute flavour name (e.g., CSO4A8 for 4 vCPU / 8 GB RAM). See available flavours. Changing this value forces a new resource.
+            id: (String) Computed by the API. Unique identifier for the resource.
+            key_pair_uri_ref: (String) URI of the SSH key pair to inject at boot. Reference the uri attribute of an arubacloud_keypair resource. Changing this value forces a new resource.
+            location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). See the available locations and zones. Changing this value forces a new resource.
+            name: (String) Display name for the CloudServer. Changing this value forces a new resource.
+            network: (Attributes) Network configuration for the CloudServer. (see below for nested schema)
+            project_id: (String) ID of the project that owns this resource. Changing this value forces a new resource.
+            securitygroup_uri_refs: (List of String) List of security group URIs to apply to this CloudServer. Reference the uri attribute of each arubacloud_securitygroup resource. Changing this value forces a new resource.
+            settings: (Attributes) Compute and access settings for the CloudServer. (see below for nested schema)
+            storage: (Attributes) Storage configuration for the CloudServer. (see below for nested schema)
+            subnet_uri_refs: (List of String) List of subnet URIs to attach this CloudServer to. Reference the uri attribute of each arubacloud_subnet resource. Changing this value forces a new resource.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation. Changing this value forces a new resource.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources (e.g., as a *_uri_ref attribute).
+            user_data: (String, Sensitive) Cloud-Init configuration passed verbatim to the instance at first boot (raw YAML or shell-script). Write-only — this value is sent to the API but is not returned in subsequent read responses. Changing this value forces a new resource.
+            vpc_uri_ref: (String) URI of the VPC to attach this CloudServer to. Reference the uri attribute of an arubacloud_vpc resource. Changing this value forces a new resource.
+            zone: (String) Availability zone within the region (e.g., ITBG-1). See available zones. Changing this value forces a new resource.
+        importStatements:
+            - terraform import arubacloud_cloudserver.example <cloudserver-id>
+    arubacloud_cloudserver Data Source - ArubaCloud:
+        subCategory: Compute
+        description: Retrieves information about an existing ArubaCloud CloudServer virtual machine.
+        name: arubacloud_cloudserver Data Source - ArubaCloud
+        title: arubacloud_cloudserver Data Source - ArubaCloud
+        argumentDocs:
+            boot_volume_uri_ref: (String) URI of the bootable block storage volume.
+            elastic_ip_uri_ref: (String) URI of the Elastic IP associated with this CloudServer, if any.
+            flavor_name: (String) Compute flavour name (e.g., CSO4A8 for 4 vCPU / 8 GB RAM).
+            id: (String) Computed by the API. Unique identifier for the resource.
+            key_pair_uri_ref: (String) URI of the SSH key pair injected at boot.
+            location: (String) Region identifier for the resource (e.g., ITBG-Bergamo).
+            name: (String) Display name for the CloudServer.
+            project_id: (String) ID of the project that owns this resource.
+            securitygroup_uri_refs: (List of String) List of security group URIs applied to this CloudServer.
+            subnet_uri_refs: (List of String) List of subnet URIs attached to this CloudServer.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            uri: (String) Computed by the API. Full resource URI.
+            user_data: (String) Cloud-Init configuration passed to the instance at first boot.
+            vpc_uri_ref: (String) URI of the VPC attached to this CloudServer.
+            zone: (String) Availability zone within the region (e.g., ITBG-1).
+        importStatements: []
+    arubacloud_containerregistry:
+        subCategory: Container
+        description: Manages an ArubaCloud Container Registry — a private OCI-compatible image registry.
+        name: arubacloud_containerregistry
+        title: arubacloud_containerregistry Resource - ArubaCloud
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "billing_period": "Hour",
+                  "location": "ITBG-Bergamo",
+                  "name": "example-container-registry",
+                  "network": {
+                    "public_ip_uri_ref": "${arubacloud_elasticip.example.uri}",
+                    "security_group_uri_ref": "${arubacloud_securitygroup.example.uri}",
+                    "subnet_uri_ref": "${arubacloud_subnet.example.uri}",
+                    "vpc_uri_ref": "${arubacloud_vpc.example.uri}"
+                  },
+                  "project_id": "your-project-id",
+                  "settings": {
+                    "admin_user": "adminuser",
+                    "concurrent_users_flavor": "Small"
+                  },
+                  "storage": {
+                    "block_storage_uri_ref": "${arubacloud_blockstorage.example.uri}"
+                  },
+                  "tags": [
+                    "container",
+                    "test"
+                  ]
+                }
+        argumentDocs:
+            admin_user: (String) Administrator username for the registry. Must not be "admin" (reserved by the API).
+            arubacloud_project: ', arubacloud_vpc, arubacloud_subnet, arubacloud_elasticip, arubacloud_securitygroup, arubacloud_blockstorage'
+            billing_period: '(String) Billing cycle. Accepted values: Hour, Month, Year.'
+            block_storage_uri_ref: (String) URI of the block storage volume (e.g., arubacloud_blockstorage.example.uri).
+            concurrent_users_flavor: '(String) Concurrency tier that determines how many simultaneous push/pull sessions are supported. Accepted values: Small, Medium, HighPerf.'
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the container registry.
+            network: (Attributes) Network resources attached to the registry. (see below for nested schema)
+            project_id: (String) ID of the project that owns this resource.
+            public_ip_uri_ref: (String) URI of the Elastic IP that exposes the registry endpoint (e.g., arubacloud_elasticip.example.uri).
+            security_group_uri_ref: (String) URI of the security group controlling registry traffic (e.g., arubacloud_securitygroup.example.uri).
+            settings: (Attributes) Registry configuration settings. Required because admin_user is mandatory. (see below for nested schema)
+            storage: (Attributes) Block storage volume that backs the registry image store. (see below for nested schema)
+            subnet_uri_ref: (String) URI of the subnet within the VPC (e.g., arubacloud_subnet.example.uri).
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+            vpc_uri_ref: (String) URI of the VPC that hosts the registry (e.g., arubacloud_vpc.example.uri).
+        importStatements:
+            - terraform import arubacloud_containerregistry.example <containerregistry-id>
+    arubacloud_containerregistry Data Source - ArubaCloud:
+        subCategory: Container
+        description: Retrieves information about an existing ArubaCloud Container Registry.
+        name: arubacloud_containerregistry Data Source - ArubaCloud
+        title: arubacloud_containerregistry Data Source - ArubaCloud
+        argumentDocs:
+            admin_user: (String) Administrator username for the registry.
+            billing_period: '(String) Billing cycle. Accepted values: Hour, Month, Year.'
+            block_storage_uri_ref: (String) URI of the block storage volume backing the registry image store.
+            concurrent_users_flavor: (String) Concurrency tier for simultaneous push/pull sessions (Small, Medium, HighPerf).
+            id: (String) Unique identifier of the container registry to look up.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the container registry.
+            project_id: (String) ID of the project that owns this resource.
+            public_ip_uri_ref: (String) URI of the Elastic IP that exposes the registry endpoint.
+            security_group_uri_ref: (String) URI of the security group controlling registry traffic.
+            subnet_uri_ref: (String) URI of the subnet within the VPC.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+            vpc_uri_ref: (String) URI of the VPC that hosts the registry.
+        importStatements: []
+    arubacloud_database:
+        subCategory: Database
+        description: Manages a logical database within an ArubaCloud DBaaS cluster.
+        name: arubacloud_database
+        title: arubacloud_database Resource - ArubaCloud
+        examples:
+            - name: basic
+              manifest: |-
+                {
+                  "name": "basic-database"
+                }
+        argumentDocs:
+            arubacloud_dbaas: cluster referenced by dbaas_id.
+            dbaas_id: (String) ID of the parent DBaaS cluster this database belongs to.
+            id: (String) Computed by the API. Unique identifier for the resource (same as the database name).
+            name: (String) Display name for the database. The database API does not support renaming — changing this value forces the resource to be destroyed and re-created. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            project_id: (String) ID of the project that owns this resource.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+        importStatements:
+            - terraform import arubacloud_database.example <database-id>
+    arubacloud_database Data Source - ArubaCloud:
+        subCategory: Database
+        description: Retrieves information about an existing ArubaCloud database within a DBaaS cluster.
+        name: arubacloud_database Data Source - ArubaCloud
+        title: arubacloud_database Data Source - ArubaCloud
+        argumentDocs:
+            dbaas_id: (String) ID of the parent DBaaS cluster this database belongs to.
+            id: (String) Unique identifier of the database to look up (same as the database name).
+            name: (String) Display name for the database.
+            project_id: (String) ID of the project that owns this resource.
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+        importStatements: []
+    arubacloud_databasebackup:
+        subCategory: Database
+        description: Manages a backup of an ArubaCloud DBaaS database.
+        name: arubacloud_databasebackup
+        title: arubacloud_databasebackup Resource - ArubaCloud
+        examples:
+            - name: basic
+              manifest: |-
+                {
+                  "database": "example-database",
+                  "location": "example-location",
+                  "name": "example-database-backup",
+                  "project_id": "example-project"
+                }
+        argumentDocs:
+            arubacloud_dbaas: cluster and an existing arubacloud_database.
+            billing_period: '(String) Billing cycle. Accepted values: Hour, Month, Year.'
+            database: (String) Name of the logical database within the DBaaS cluster to back up.
+            dbaas_id: (String) ID of the DBaaS cluster or database to back up.
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Auto-generated backup name assigned by the API (e.g. mysql_wordpress_20260713140736). The value provided in config is not used — the API always generates its own name.
+            project_id: (String) ID of the project that owns this resource.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+            zone: (String) Availability zone within the region where the backup is stored.
+        importStatements:
+            - terraform import arubacloud_databasebackup.example <databasebackup-id>
+    arubacloud_databasebackup Data Source - ArubaCloud:
+        subCategory: Database
+        description: Retrieves information about an existing ArubaCloud database backup.
+        name: arubacloud_databasebackup Data Source - ArubaCloud
+        title: arubacloud_databasebackup Data Source - ArubaCloud
+        argumentDocs:
+            billing_period: '(String) Billing cycle. Accepted values: Hour, Month, Year.'
+            database: (String) Name or ID of the logical database this backup was taken from.
+            dbaas_id: (String) ID of the DBaaS cluster this backup belongs to.
+            id: (String) Unique identifier of the database backup to look up.
+            location: (String) Region identifier where the backup is stored.
+            name: (String) Display name for the database backup.
+            project_id: (String) ID of the project that owns this resource.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+            zone: (String) Availability zone within the region where the backup is stored.
+        importStatements: []
+    arubacloud_databasegrant:
+        subCategory: Database
+        description: Manages a privilege grant for an ArubaCloud DBaaS user on a specific database.
+        name: arubacloud_databasegrant
+        title: arubacloud_databasegrant Resource - ArubaCloud
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "database": "${arubacloud_database.example.id}",
+                  "dbaas_id": "${arubacloud_dbaas.example.id}",
+                  "project_id": "${arubacloud_project.example.id}",
+                  "role": "readwrite",
+                  "user_id": "${arubacloud_dbaasuser.example.id}"
+                }
+              references:
+                database: arubacloud_database.example.id
+                dbaas_id: arubacloud_dbaas.example.id
+                project_id: arubacloud_project.example.id
+                user_id: arubacloud_dbaasuser.example.id
+        argumentDocs:
+            arubacloud_dbaas: cluster, arubacloud_database, and arubacloud_dbaasuser.
+            database: (String) ID of the database this grant applies to. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            dbaas_id: (String) ID of the parent DBaaS cluster this grant belongs to. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            id: '(String) Computed by the API. Unique identifier for the resource (composite key: project_id/dbaas_id/database/user_id).'
+            project_id: (String) ID of the project that owns this resource. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            role: (String) Privilege level granted. Accepted values depend on the database engine (e.g., ALL, READ, WRITE). The DBaaS grant API does not support in-place role changes. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+            user_id: (String) Name or ID of the DBaaS user receiving the grant. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+        importStatements:
+            - terraform import arubacloud_databasegrant.example <databasegrant-id>
+    arubacloud_databasegrant Data Source - ArubaCloud:
+        subCategory: Database
+        description: Retrieves information about an existing ArubaCloud database grant.
+        name: arubacloud_databasegrant Data Source - ArubaCloud
+        title: arubacloud_databasegrant Data Source - ArubaCloud
+        argumentDocs:
+            database: (String) ID of the database this grant applies to.
+            dbaas_id: (String) ID of the parent DBaaS cluster this grant belongs to.
+            id: '(String) Computed by the API. Unique identifier for the grant (composite key: project_id/dbaas_id/database/user_id).'
+            project_id: (String) ID of the project that owns this resource.
+            role: (String) Privilege level granted to the user on the database.
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+            user_id: (String) Name or ID of the DBaaS user whose grant is being looked up.
+        importStatements: []
+    arubacloud_dbaas:
+        subCategory: Database
+        description: Manages an ArubaCloud DBaaS cluster — a managed database cluster with automated backups and high availability.
+        name: arubacloud_dbaas
+        title: arubacloud_dbaas Resource - ArubaCloud
+        examples:
+            - name: basic
+              manifest: |-
+                {
+                  "billing_period": "Hour",
+                  "engine_id": "mysql-8.0",
+                  "flavor": "DBO2A4",
+                  "location": "ITBG-Bergamo",
+                  "name": "basic-dbaas",
+                  "network": {
+                    "elastic_ip_uri_ref": "${arubacloud_elasticip.example.uri}",
+                    "security_group_uri_ref": "${arubacloud_securitygroup.example.uri}",
+                    "subnet_uri_ref": "${arubacloud_subnet.example.uri}",
+                    "vpc_uri_ref": "${arubacloud_vpc.example.uri}"
+                  },
+                  "project_id": "${arubacloud_project.example.id}",
+                  "storage": {
+                    "autoscaling": {
+                      "available_space": 100,
+                      "enabled": true,
+                      "step_size": 10
+                    },
+                    "size_gb": 100
+                  },
+                  "tags": [
+                    "dbaas",
+                    "test"
+                  ],
+                  "zone": "ITBG-1"
+                }
+              references:
+                project_id: arubacloud_project.example.id
+        argumentDocs:
+            arubacloud_project: ', arubacloud_vpc, arubacloud_subnet, and arubacloud_securitygroup to exist before creating a DBaaS cluster.'
+            autoscaling: (Attributes) Optional autoscaling configuration for the DBaaS storage. (see below for nested schema)
+            available_space: (Number) Minimum available space threshold in GB. When the available storage falls below this value, autoscaling increases storage by the step_size amount.
+            billing_period: '(String) Billing cycle. Accepted values: Hour, Month, Year. If omitted, the value returned by the API is used (Computed).'
+            elastic_ip_uri_ref: (String) Optional URI reference to an Elastic IP resource.
+            enabled: (Boolean) Whether storage autoscaling is enabled.
+            engine_id: (String) Database engine type and version identifier (e.g., mysql-8.0 for MySQL 8.0, postgresql-15 for PostgreSQL 15). See the available engines. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            flavor: (String) Compute flavour for the DBaaS cluster nodes. See available flavours. For example, DBO2A4 means 2 vCPU and 4 GB RAM.
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            name: (String) Display name for the DBaaS cluster.
+            network: (Attributes) Network configuration for the DBaaS instance. All URI references are immutable after creation. (see below for nested schema)
+            project_id: (String) ID of the project that owns this resource. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            security_group_uri_ref: (String) URI reference to the Security Group resource.
+            size_gb: (Number) Storage size in GB for the DBaaS instance.
+            step_size: (Number) Amount of storage (in GB) added on each autoscaling event.
+            storage: (Attributes) Storage configuration for the DBaaS instance. (see below for nested schema)
+            subnet_uri_ref: (String) URI reference to the Subnet resource.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+            vpc_uri_ref: (String) URI reference to the VPC resource.
+            zone: (String) Availability zone within the region where the DBaaS cluster is deployed. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+        importStatements:
+            - terraform import arubacloud_dbaas.example <dbaas-id>
+    arubacloud_dbaas Data Source - ArubaCloud:
+        subCategory: Database
+        description: Retrieves information about an existing ArubaCloud DBaaS cluster.
+        name: arubacloud_dbaas Data Source - ArubaCloud
+        title: arubacloud_dbaas Data Source - ArubaCloud
+        argumentDocs:
+            autoscaling_available_space: (Number) Computed by the API. Minimum available space threshold in GB that triggers autoscaling.
+            autoscaling_enabled: (Boolean) Computed by the API. Whether storage autoscaling is enabled.
+            autoscaling_step_size: (Number) Computed by the API. Amount of storage (in GB) added on each autoscaling event.
+            billing_period: '(String) Billing cycle. Accepted values: Hour, Month, Year.'
+            elastic_ip_uri_ref: (String) Computed by the API. URI reference to the Elastic IP attached to the DBaaS cluster, if any.
+            engine_id: (String) Database engine type and version identifier (e.g., mysql-8.0, postgresql-15).
+            flavor: (String) Compute flavour for the DBaaS cluster nodes (e.g., DBO2A4).
+            id: (String) Unique identifier of the DBaaS cluster to look up.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the DBaaS cluster.
+            project_id: (String) ID of the project that owns this resource.
+            security_group_uri_ref: (String) Computed by the API. URI reference to the Security Group attached to the DBaaS cluster.
+            storage_size_gb: (Number) Computed by the API. Storage size in GB allocated to the DBaaS instance.
+            subnet_uri_ref: (String) Computed by the API. URI reference to the Subnet the DBaaS cluster is attached to.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+            vpc_uri_ref: (String) Computed by the API. URI reference to the VPC the DBaaS cluster is attached to.
+            zone: (String) Availability zone within the region where the DBaaS cluster is deployed.
+        importStatements: []
+    arubacloud_dbaasuser:
+        subCategory: Database
+        description: Manages a database user within an ArubaCloud DBaaS cluster.
+        name: arubacloud_dbaasuser
+        title: arubacloud_dbaasuser Resource - ArubaCloud
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "dbaas_id": "example-dbaas-id",
+                  "password": "example-password",
+                  "username": "example-user"
+                }
+        argumentDocs:
+            arubacloud_dbaas: cluster referenced by dbaas_id.
+            dbaas_id: (String) ID of the parent DBaaS cluster this user belongs to. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            id: (String) Computed by the API. Unique identifier for the resource (same as the username).
+            password: (String, Sensitive) Password for the DBaaS user. Write-only — this value is sent to the API but is not returned in subsequent read responses. The DBaaS user API does not support password updates. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            project_id: (String) ID of the project that owns this resource. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+            username: (String) Username for the DBaaS user. The DBaaS user API does not support renaming users. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+        importStatements:
+            - terraform import arubacloud_dbaasuser.example <dbaasuser-id>
+    arubacloud_dbaasuser Data Source - ArubaCloud:
+        subCategory: Database
+        description: Retrieves information about an existing ArubaCloud DBaaS user.
+        name: arubacloud_dbaasuser Data Source - ArubaCloud
+        title: arubacloud_dbaasuser Data Source - ArubaCloud
+        argumentDocs:
+            dbaas_id: (String) ID of the parent DBaaS cluster this user belongs to.
+            id: (String) Computed by the API. Unique identifier for the resource (same as the username).
+            password: (String, Sensitive) Password for the DBaaS user. Write-only — this value is sent to the API but is not returned in subsequent read responses.
+            project_id: (String) ID of the project that owns this resource.
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+            username: (String) Username of the DBaaS user to look up.
+        importStatements: []
+    arubacloud_elasticip:
+        subCategory: Network
+        description: Manages an ArubaCloud Elastic IP — a static public IPv4 address.
+        name: arubacloud_elasticip
+        title: arubacloud_elasticip Resource - ArubaCloud
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "billing_period": "Hour",
+                  "location": "ITBG-Bergamo",
+                  "name": "example-elastic-ip",
+                  "project_id": "your-project-id",
+                  "tags": [
+                    "public",
+                    "test"
+                  ]
+                }
+        argumentDocs:
+            address: (String) Computed by the API. The assigned public IP address.
+            billing_period: '(String) Billing cycle. Accepted values: Hour, Month, Year.'
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). Changing this value forces a new resource.
+            name: (String) Display name for the Elastic IP.
+            project_id: (String) ID of the project that owns this resource. Changing this value forces a new resource.
+            tags: (List of String) List of string tags.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI.
+        importStatements:
+            - terraform import arubacloud_elasticip.example <elasticip-id>
+    arubacloud_elasticip Data Source - ArubaCloud:
+        subCategory: Network
+        description: Retrieves information about an existing ArubaCloud Elastic IP.
+        name: arubacloud_elasticip Data Source - ArubaCloud
+        title: arubacloud_elasticip Data Source - ArubaCloud
+        argumentDocs:
+            address: (String) Computed by the API. Public IPv4 address allocated for this Elastic IP.
+            billing_period: '(String) Billing cycle for the resource. Accepted values: Hour, Month, Year.'
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the Elastic IP.
+            project_id: (String) ID of the project that owns this resource.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+        importStatements: []
+    arubacloud_kaas:
+        subCategory: Container
+        description: Manages an ArubaCloud Kubernetes cluster (KaaS — Kubernetes-as-a-Service).
+        name: arubacloud_kaas
+        title: arubacloud_kaas Resource - ArubaCloud
+        examples:
+            - name: basic
+              manifest: |-
+                {
+                  "billing_period": "Hour",
+                  "location": "ITBG-Bergamo",
+                  "name": "basic-kaas",
+                  "network": [
+                    {
+                      "node_cidr": {
+                        "address": "10.0.2.0/24",
+                        "name": "kaas-node-cidr"
+                      },
+                      "pod_cidr": "10.0.3.0/24",
+                      "security_group_name": "kaas-security-group",
+                      "subnet_uri_ref": "${arubacloud_subnet.example.uri}",
+                      "vpc_uri_ref": "${arubacloud_vpc.example.uri}"
+                    }
+                  ],
+                  "project_id": "your-project-id",
+                  "settings": [
+                    {
+                      "ha": true,
+                      "kubernetes_version": "1.33.2",
+                      "node_pools": [
+                        {
+                          "autoscaling": true,
+                          "instance": "K2A4",
+                          "max_count": 5,
+                          "min_count": 1,
+                          "name": "pool-1",
+                          "nodes": 2,
+                          "zone": "ITBG-1"
+                        }
+                      ]
+                    }
+                  ],
+                  "tags": [
+                    "k8s",
+                    "test"
+                  ]
+                }
+              references:
+                network.subnet_uri_ref: arubacloud_subnet.example.uri
+                network.vpc_uri_ref: arubacloud_vpc.example.uri
+        argumentDocs:
+            address: (String) Node CIDR address in CIDR notation (e.g., 10.0.0.0/24).
+            arubacloud_project: ', arubacloud_vpc, arubacloud_subnet'
+            autoscaling: (Boolean) When true, the node pool scales automatically between min_count and max_count.
+            billing_period: '(String) Billing cycle. Accepted values: Hour, Month, Year.'
+            ha: (Boolean) When true, the control plane is deployed in high-availability mode.
+            id: (String) Computed by the API. Unique identifier for the resource.
+            instance: (String) Compute flavour for cluster nodes (e.g., CSO4A8). See available flavours.
+            kubeconfig: (String, Sensitive) Kubeconfig YAML for kubectl access. Populated automatically when the cluster becomes active. Sensitive — stored in Terraform state but redacted from plan output.
+            kubernetes_version: (String) Kubernetes version string (e.g., 1.28). Available versions are listed in the ArubaCloud metadata API.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            management_ip: (String) Computed by the API. Management IP address of the cluster control plane, available once the cluster is active.
+            max_count: (Number) Maximum number of nodes when autoscaling is enabled.
+            min_count: (Number) Minimum number of nodes when autoscaling is enabled.
+            name: (String) Display name for the KaaS cluster.
+            network: (Attributes) Network configuration for the KaaS cluster. (see below for nested schema)
+            node_cidr: (Attributes) CIDR block assigned to cluster nodes. (see below for nested schema)
+            node_pools: (Attributes List) One or more node pools that make up the cluster worker fleet. (see below for nested schema)
+            nodes: (Number) Number of worker nodes in the cluster.
+            pod_cidr: (String) CIDR block used for pod networking within the cluster (e.g., 10.0.3.0/24).
+            project_id: (String) ID of the project that owns this resource. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            security_group_name: (String) Name of the security group applied to cluster nodes.
+            settings: (Attributes) Kubernetes version and node-pool configuration. (see below for nested schema)
+            subnet_uri_ref: (String) URI of the subnet within the VPC (e.g., arubacloud_subnet.example.uri). (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+            vpc_uri_ref: (String) URI of the VPC that hosts the cluster (e.g., arubacloud_vpc.example.uri). (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            zone: (String) Datacenter zone code where the node pool is deployed.
+        importStatements:
+            - terraform import arubacloud_kaas.example <kaas-id>
+    arubacloud_kaas Data Source - ArubaCloud:
+        subCategory: Container
+        description: Retrieves information about an existing ArubaCloud KaaS (Kubernetes-as-a-Service) cluster.
+        name: arubacloud_kaas Data Source - ArubaCloud
+        title: arubacloud_kaas Data Source - ArubaCloud
+        argumentDocs:
+            autoscaling: (Boolean) Whether autoscaling is enabled for this node pool.
+            billing_period: '(String) Billing cycle. Accepted values: Hour, Month, Year.'
+            ha: (Boolean) Whether the control plane is deployed in high-availability mode.
+            id: (String) Unique identifier of the KaaS cluster to look up.
+            instance: (String) Compute flavour for cluster nodes.
+            kubeconfig: (String, Sensitive) Computed by the API. Kubeconfig YAML for kubectl access. Write-only — this value is sent to the API but is not returned in subsequent read responses.
+            kubernetes_version: (String) Kubernetes version string (e.g., 1.28). Available versions are listed in the ArubaCloud metadata API.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones.
+            management_ip: (String) Computed by the API. Management IP address of the cluster control plane.
+            max_count: (Number) Maximum number of nodes when autoscaling is enabled.
+            min_count: (Number) Minimum number of nodes when autoscaling is enabled.
+            name: (String) Display name for the KaaS cluster.
+            node_cidr_address: (String) Node CIDR address in CIDR notation.
+            node_cidr_name: (String) Human-readable label for the node CIDR block.
+            node_pools: (Attributes List) Node pools that make up the cluster worker fleet. (see below for nested schema)
+            nodes: (Number) Number of worker nodes in the cluster.
+            pod_cidr: (String) CIDR block used for pod networking within the cluster.
+            project_id: (String) ID of the project that owns this resource.
+            security_group_name: (String) Name of the security group applied to cluster nodes.
+            subnet_uri_ref: (String) URI of the subnet within the VPC.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+            vpc_uri_ref: (String) URI of the VPC that hosts the cluster.
+            zone: (String) Datacenter zone code where the node pool is deployed.
+        importStatements: []
+    arubacloud_keypair:
+        subCategory: Compute
+        description: Manages an ArubaCloud SSH KeyPair.
+        name: arubacloud_keypair
+        title: arubacloud_keypair Resource - ArubaCloud
+        examples:
+            - name: basic
+              manifest: |-
+                {
+                  "location": "ITBG-Bergamo",
+                  "name": "example-keypair",
+                  "project_id": "your-project-id",
+                  "tags": [
+                    "compute",
+                    "test"
+                  ],
+                  "value": "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEA2No7At0tgHrcZTL0kGWyLLUqPKfOhD9hGdNV9PbJxhjOGNFxcwdQ9wCXsJ3RQaRHBuGIgVodDurrlqzxFK86yCHMgXT2YLHF0j9P4m9GDiCfOK6msbFb89p5xZExjwD2zK+w68r7iOKZeRB2yrznW5TD3KDemSPIQQIVcyLF+yxft49HWBTI3PVQ4rBVOBJ2PdC9SAOf7CYnptW24CRrC0h85szIdwMA+Kmasfl3YGzk4MxheHrTO8C40aXXpieJ9S2VQA4VJAMRyAboptIK0cKjBYrbt5YkEL0AlyBGPIu6MPYr5K/MHyDunDi9yc7VYRYRR0f46MBOSqMUiGPnMw=="
+                }
+        argumentDocs:
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). See the available locations and zones. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            name: (String) Display name for the KeyPair. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            project_id: (String) ID of the project that owns this resource. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources (e.g., as a *_uri_ref attribute).
+            value: (String, Sensitive) OpenSSH-format public key string (e.g., ssh-rsa AAAA...). The provider uploads this to ArubaCloud; the corresponding private key is never stored. Write-only — this value is sent to the API but is not returned in subsequent read responses. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+        importStatements:
+            - terraform import arubacloud_keypair.example <keypair-id>
+    arubacloud_keypair Data Source - ArubaCloud:
+        subCategory: Compute
+        description: Retrieves information about an existing ArubaCloud SSH KeyPair.
+        name: arubacloud_keypair Data Source - ArubaCloud
+        title: arubacloud_keypair Data Source - ArubaCloud
+        argumentDocs:
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the KeyPair.
+            project_id: (String) ID of the project that owns this resource.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+            value: (String) OpenSSH-format public key string (e.g., ssh-rsa AAAA...). The provider uploads this to ArubaCloud; the corresponding private key is never stored.
+        importStatements: []
+    arubacloud_kms:
+        subCategory: Security
+        description: Manages an ArubaCloud KMS (Key Management Service) instance for storing and managing encryption keys.
+        name: arubacloud_kms
+        title: arubacloud_kms Resource - ArubaCloud
+        examples:
+            - name: basic
+              manifest: |-
+                {
+                  "billing_period": "Hour",
+                  "location": "ITBG-Bergamo",
+                  "name": "basic-kms",
+                  "project_id": "your-project-id",
+                  "tags": [
+                    "encryption",
+                    "security"
+                  ]
+                }
+        argumentDocs:
+            billing_period: '(String) Billing cycle. Accepted values: Hour, Month, Year.'
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the KMS instance.
+            project_id: (String) ID of the project that owns this resource.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+        importStatements:
+            - terraform import arubacloud_kms.example <kms-id>
+    arubacloud_kms Data Source - ArubaCloud:
+        subCategory: Security
+        description: Retrieves information about an existing ArubaCloud KMS instance.
+        name: arubacloud_kms Data Source - ArubaCloud
+        title: arubacloud_kms Data Source - ArubaCloud
+        argumentDocs:
+            description: (String) Optional human-readable description of the KMS instance.
+            endpoint: (String) Computed by the API. Endpoint URL used to interact with the KMS service.
+            id: (String) Unique identifier of the KMS instance to look up.
+            name: (String) Display name for the KMS instance.
+            project_id: (String) ID of the project that owns this resource.
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+        importStatements: []
+    arubacloud_project:
+        subCategory: Management
+        description: Manages an ArubaCloud Project — the top-level organisational unit for all resources.
+        name: arubacloud_project
+        title: arubacloud_project Resource - ArubaCloud
+        examples:
+            - name: basic
+              manifest: |-
+                {
+                  "description": "Project for testing Terraform provider",
+                  "name": "basic-project",
+                  "tags": [
+                    "terraform",
+                    "test"
+                  ]
+                }
+        argumentDocs:
+            arubacloud_project: is the root resource; all other resources depend on it.
+            description: (String) Optional human-readable description of the project.
+            id: (String) Computed by the API. Unique identifier for the resource.
+            name: (String) Display name for the Project.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+        importStatements:
+            - terraform import arubacloud_project.example <project-id>
+    arubacloud_project Data Source - ArubaCloud:
+        subCategory: Management
+        description: Retrieves information about an existing ArubaCloud Project.
+        name: arubacloud_project Data Source - ArubaCloud
+        title: arubacloud_project Data Source - ArubaCloud
+        argumentDocs:
+            description: (String) Optional human-readable description of the project.
+            id: (String) Computed by the API. Unique identifier for the resource.
+            name: (String) Display name for the Project.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+        importStatements: []
+    arubacloud_restore:
+        subCategory: Storage
+        description: Manages an ArubaCloud Block Storage Restore operation — restores a backup to a block storage volume.
+        name: arubacloud_restore
+        title: arubacloud_restore Resource - ArubaCloud
+        examples:
+            - name: basic
+              manifest: |-
+                {
+                  "name": "basic-restore"
+                }
+        argumentDocs:
+            backup_id: (String) ID of the backup to restore from. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            name: (String) Display name for the restore operation.
+            project_id: (String) ID of the project that owns this resource. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+            volume_id: (String) ID of the target block storage volume to restore the backup onto. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+        importStatements:
+            - terraform import arubacloud_restore.example <restore-id>
+    arubacloud_restore Data Source - ArubaCloud:
+        subCategory: Storage
+        description: Retrieves information about an existing ArubaCloud Block Storage Restore operation.
+        name: arubacloud_restore Data Source - ArubaCloud
+        title: arubacloud_restore Data Source - ArubaCloud
+        argumentDocs:
+            backup_id: (String) ID of the backup this restore operation belongs to.
+            id: (String) Unique identifier of the restore operation to look up.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the restore operation.
+            project_id: (String) ID of the project that owns this resource.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+            volume_id: (String) ID of the target block storage volume that was restored.
+        importStatements: []
+    arubacloud_schedulejob:
+        subCategory: Schedule
+        description: Manages an ArubaCloud Scheduled Job — a cron-triggered automation task.
+        name: arubacloud_schedulejob
+        title: arubacloud_schedulejob Resource - ArubaCloud
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "location": "example-location",
+                  "name": "example-schedule-job",
+                  "project_id": "example-project",
+                  "properties": {
+                    "enabled": true,
+                    "execute_until": "2025-12-01T10:00:00Z",
+                    "schedule_at": "2025-11-26T10:00:00Z",
+                    "schedule_job_type": "Recurring"
+                  },
+                  "tags": [
+                    "tag1",
+                    "tag2"
+                  ]
+                }
+        argumentDocs:
+            action_uri: (String) URI of the API action to invoke on the target resource.
+            body: (String) Optional JSON request body sent with the HTTP call.
+            cron: (String) Cron expression defining the job schedule (e.g., 0 * * * * for hourly). Standard 5-field cron format.
+            enabled: (Boolean) When true, the job is active and will trigger on schedule.
+            execute_until: (String) ISO 8601 date-time after which a Recurring job stops executing.
+            http_verb: (String) HTTP method used to call the action URI (e.g., GET, POST, PUT, DELETE).
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the scheduled job.
+            project_id: (String) ID of the project that owns this resource.
+            properties: (Attributes) Job scheduling and execution configuration. (see below for nested schema)
+            resource_uri: (String) URI of the ArubaCloud resource that the step targets.
+            schedule_at: (String) ISO 8601 date-time at which the job executes once (required for OneShot type).
+            schedule_job_type: '(String) Execution mode of the job. Accepted values: OneShot (runs once at schedule_at), Recurring (repeats on a cron schedule).'
+            steps: (Attributes List) Ordered list of API actions executed when the job triggers. (see below for nested schema)
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+        importStatements:
+            - terraform import arubacloud_schedulejob.example <schedulejob-id>
+    arubacloud_schedulejob Data Source - ArubaCloud:
+        subCategory: Schedule
+        description: Retrieves information about an existing ArubaCloud Scheduled Job.
+        name: arubacloud_schedulejob Data Source - ArubaCloud
+        title: arubacloud_schedulejob Data Source - ArubaCloud
+        argumentDocs:
+            cron: (String) Cron expression defining the job schedule (e.g., 0 * * * * for hourly). Standard 5-field cron format.
+            description: (String) Optional human-readable description of the scheduled job.
+            id: (String) Unique identifier of the scheduled job to look up.
+            name: (String) Display name for the scheduled job.
+            project_id: (String) ID of the project that owns this resource.
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+        importStatements: []
+    arubacloud_securitygroup:
+        subCategory: Network
+        description: Manages an ArubaCloud Security Group — a collection of firewall rules applied to CloudServer network interfaces.
+        name: arubacloud_securitygroup
+        title: arubacloud_securitygroup Resource - ArubaCloud
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "location": "ITBG-Bergamo",
+                  "name": "example-security-group",
+                  "project_id": "your-project-id",
+                  "tags": [
+                    "security",
+                    "example"
+                  ],
+                  "vpc_id": "your-vpc-id"
+                }
+        argumentDocs:
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). See the available locations and zones. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            name: (String) Display name for the security group.
+            project_id: (String) ID of the project that owns this resource. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources (e.g., as a *_uri_ref attribute).
+            vpc_id: (String) ID of the VPC this security group is scoped to. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+        importStatements:
+            - terraform import arubacloud_securitygroup.example <securitygroup-id>
+    arubacloud_securitygroup Data Source - ArubaCloud:
+        subCategory: Network
+        description: Retrieves information about an existing ArubaCloud Security Group.
+        name: arubacloud_securitygroup Data Source - ArubaCloud
+        title: arubacloud_securitygroup Data Source - ArubaCloud
+        argumentDocs:
+            id: (String) Unique identifier of the security group to look up.
+            location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the security group.
+            project_id: (String) ID of the project that owns this resource.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+            vpc_id: (String) ID of the VPC this security group is scoped to.
+        importStatements: []
+    arubacloud_securityrule:
+        subCategory: Network
+        description: Manages an ArubaCloud Security Rule within an arubacloud_securitygroup.
+        name: arubacloud_securityrule
+        title: arubacloud_securityrule Resource - ArubaCloud
+        examples:
+            - name: http
+              manifest: |-
+                {
+                  "location": "ITBG-Bergamo",
+                  "name": "example-http-rule",
+                  "project_id": "example-project-id",
+                  "properties": {
+                    "direction": "Ingress",
+                    "port": "80",
+                    "protocol": "TCP",
+                    "target": {
+                      "kind": "Ip",
+                      "value": "0.0.0.0/0"
+                    }
+                  },
+                  "security_group_id": "example-security-group-id",
+                  "tags": [
+                    "security",
+                    "example"
+                  ],
+                  "vpc_id": "example-vpc-id"
+                }
+            - name: egress_all
+              manifest: |-
+                {
+                  "location": "ITBG-Bergamo",
+                  "name": "example-egress-all",
+                  "project_id": "example-project-id",
+                  "properties": {
+                    "direction": "Egress",
+                    "port": "*",
+                    "protocol": "ANY",
+                    "target": {
+                      "kind": "Ip",
+                      "value": "0.0.0.0/0"
+                    }
+                  },
+                  "security_group_id": "example-security-group-id",
+                  "vpc_id": "example-vpc-id"
+                }
+        argumentDocs:
+            direction: '(String) Traffic direction the rule applies to. Accepted values: Ingress, Egress. (Immutable — changing this value forces the resource to be destroyed and re-created.)'
+            id: (String) Computed by the API. Unique identifier for the resource.
+            kind: '(String) Type of the target endpoint. Accepted values: IP, SecurityGroup (case-insensitive — the value is normalised before sending to the API). (Immutable — changing this value forces the resource to be destroyed and re-created.)'
+            location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). See the available locations and zones. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            name: (String) Display name for the security rule.
+            port: (String) Port or port range for TCP/UDP (e.g., 80 or 8080-8090). Use 0 for ICMP or ANY. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            project_id: (String) ID of the project that owns this resource. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            properties: (Attributes) Traffic-matching properties of the security rule. All fields are immutable after creation — to change any of them, destroy and re-create the rule. (see below for nested schema)
+            protocol: '(String) IP protocol. Accepted values: TCP, UDP, ICMP, ANY (case-insensitive — the value is normalised before sending to the API). (Immutable — changing this value forces the resource to be destroyed and re-created.)'
+            security_group_id: (String) ID of the security group this rule belongs to. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            target: (Attributes) Source (inbound) or destination (outbound) endpoint for this rule. (Immutable — changing this value forces the resource to be destroyed and re-created.) (see below for nested schema)
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources (e.g., as a *_uri_ref attribute).
+            value: (String) Source (inbound) or destination (outbound) CIDR in notation like 0.0.0.0/0, or SecurityGroup URI. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            vpc_id: (String) ID of the VPC this security rule belongs to. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+        importStatements:
+            - terraform import arubacloud_securityrule.example <securityrule-id>
+    arubacloud_securityrule Data Source - ArubaCloud:
+        subCategory: Network
+        description: Retrieves information about an existing ArubaCloud Security Rule.
+        name: arubacloud_securityrule Data Source - ArubaCloud
+        title: arubacloud_securityrule Data Source - ArubaCloud
+        argumentDocs:
+            direction: '(String) Traffic direction the rule applies to. Accepted values: Ingress, Egress.'
+            id: (String) Unique identifier of the security rule to look up.
+            location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the security rule.
+            port: (String) Port or port range for TCP/UDP (e.g., 80 or 8080-8090). Use 0 for ICMP or ANY.
+            project_id: (String) ID of the project that owns this resource.
+            protocol: '(String) IP protocol. Accepted values: TCP, UDP, ICMP, ANY.'
+            security_group_id: (String) ID of the security group this rule belongs to.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            target_kind: '(String) Type of the target endpoint. Accepted values: IP, SecurityGroup.'
+            target_value: (String) Source (inbound) or destination (outbound) CIDR in notation like 0.0.0.0/0, or SecurityGroup URI.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources (e.g., as a *_uri_ref attribute).
+            vpc_id: (String) ID of the VPC this security rule belongs to.
+        importStatements: []
+    arubacloud_snapshot:
+        subCategory: Storage
+        description: Manages an ArubaCloud Snapshot — a point-in-time copy of a block storage volume.
+        name: arubacloud_snapshot
+        title: arubacloud_snapshot Resource - ArubaCloud
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "location": "ITBG-Bergamo",
+                  "name": "example-snapshot",
+                  "project_id": "your-project-id"
+                }
+        argumentDocs:
+            billing_period: '(String) Billing cycle. Accepted values: Hour, Month, Year.'
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            name: (String) Display name for the snapshot.
+            project_id: (String) ID of the project that owns this resource. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+            volume_uri: (String) URI of the block storage volume this snapshot is taken from. Reference the uri attribute of an arubacloud_blockstorage resource (e.g., /projects/{project_id}/providers/Aruba.Storage/volumes/{volume_id}). (Immutable — changing this value forces the resource to be destroyed and re-created.)
+        importStatements:
+            - terraform import arubacloud_snapshot.example <snapshot-id>
+    arubacloud_snapshot Data Source - ArubaCloud:
+        subCategory: Storage
+        description: Retrieves information about an existing ArubaCloud Snapshot.
+        name: arubacloud_snapshot Data Source - ArubaCloud
+        title: arubacloud_snapshot Data Source - ArubaCloud
+        argumentDocs:
+            billing_period: '(String) Billing cycle. Accepted values: Hour, Month, Year.'
+            id: (String) Unique identifier of the snapshot to look up.
+            location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the snapshot.
+            project_id: (String) ID of the project that owns this resource.
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+            volume_id: (String) ID of the block storage volume this snapshot was taken from.
+        importStatements: []
+    arubacloud_subnet:
+        subCategory: Network
+        description: Manages an ArubaCloud Subnet within a VPC. Subnets can be Basic (default networking) or Advanced (custom CIDR with configurable DHCP).
+        name: arubacloud_subnet
+        title: arubacloud_subnet Resource - ArubaCloud
+        examples:
+            - name: basic
+              manifest: |-
+                {
+                  "location": "ITBG-Bergamo",
+                  "name": "basic-subnet",
+                  "network": {
+                    "address": "10.0.1.0/24",
+                    "dhcp": {
+                      "dns": [
+                        "8.8.8.8",
+                        "8.8.4.4"
+                      ],
+                      "enabled": true,
+                      "range": {
+                        "count": 100,
+                        "start": "10.0.1.10"
+                      },
+                      "routes": [
+                        {
+                          "address": "10.0.1.128/25",
+                          "gateway": "10.0.1.1"
+                        }
+                      ]
+                    }
+                  },
+                  "project_id": "your-project-id",
+                  "tags": [
+                    "network",
+                    "test"
+                  ],
+                  "type": "Advanced",
+                  "vpc_id": "your-vpc-id"
+                }
+            - name: basic_type
+              manifest: |-
+                {
+                  "location": "ITBG-Bergamo",
+                  "name": "basic-subnet",
+                  "project_id": "your-project-id",
+                  "tags": [
+                    "network",
+                    "basic"
+                  ],
+                  "type": "Basic",
+                  "vpc_id": "your-vpc-id"
+                }
+        argumentDocs:
+            address: (String) Subnet CIDR in RFC-1918 notation (e.g., 10.0.1.0/24). Must fall within the parent VPC CIDR.
+            count: (Number) Number of consecutive IP addresses in the DHCP pool.
+            dhcp: (Attributes) DHCP configuration for the subnet. (see below for nested schema)
+            dns: (List of String) List of DNS server IP addresses distributed to DHCP clients.
+            enabled: (Boolean) Whether DHCP is enabled on this subnet.
+            gateway: (String) Gateway IP address for this route.
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). See the available locations and zones. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            name: (String) Display name for the subnet.
+            network: (Attributes) Network configuration block. Required when type is Advanced. (see below for nested schema)
+            project_id: (String) ID of the project that owns this resource. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            range: (Attributes) IP address range allocated to DHCP clients. (see below for nested schema)
+            routes: (Attributes List) Static routes distributed to DHCP clients. (see below for nested schema)
+            start: (String) First IP address in the DHCP allocation range.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            type: '(String) Subnet type. Accepted values: Basic (no custom CIDR), Advanced (requires the network block). (Immutable — changing this value forces the resource to be destroyed and re-created.)'
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources (e.g., as a *_uri_ref attribute).
+            vpc_id: (String) ID of the parent VPC this subnet belongs to. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+        importStatements:
+            - terraform import arubacloud_subnet.example <subnet-id>
+    arubacloud_subnet Data Source - ArubaCloud:
+        subCategory: Network
+        description: Retrieves information about an existing ArubaCloud Subnet within a VPC.
+        name: arubacloud_subnet Data Source - ArubaCloud
+        title: arubacloud_subnet Data Source - ArubaCloud
+        argumentDocs:
+            address: (String) Subnet CIDR in RFC-1918 notation (e.g., 10.0.1.0/24). Must fall within the parent VPC CIDR.
+            dhcp_enabled: (Boolean) Whether DHCP is enabled on this subnet.
+            dhcp_range_count: (Number) Number of consecutive IP addresses in the DHCP pool.
+            dhcp_range_start: (String) First IP address in the DHCP allocation range.
+            dhcp_routes: (Attributes List) Static routes distributed to DHCP clients. (see below for nested schema)
+            dns: (List of String) List of DNS server IP addresses distributed to DHCP clients.
+            gateway: (String) Gateway IP address for this route.
+            id: (String) Unique identifier of the subnet to look up.
+            location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the subnet.
+            project_id: (String) ID of the project that owns this resource.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            type: '(String) Subnet type. Accepted values: Basic (no custom CIDR), Advanced (requires the network block).'
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources (e.g., as a *_uri_ref attribute).
+            vpc_id: (String) ID of the parent VPC this subnet belongs to.
+        importStatements: []
+    arubacloud_vpc:
+        subCategory: Network
+        description: Manages an ArubaCloud VPC (Virtual Private Cloud) — the isolated network boundary within a region where subnets, security groups, and server instances are provisioned.
+        name: arubacloud_vpc
+        title: arubacloud_vpc Resource - ArubaCloud
+        examples:
+            - name: basic
+              manifest: |-
+                {
+                  "location": "ITBG-Bergamo",
+                  "name": "basic-vpc",
+                  "project_id": "your-project-id",
+                  "tags": [
+                    "network",
+                    "test"
+                  ]
+                }
+        argumentDocs:
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). Changing this value forces a new resource.
+            name: (String) Display name for the VPC.
+            project_id: (String) ID of the project that owns this resource. Changing this value forces a new resource.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources.
+        importStatements:
+            - terraform import arubacloud_vpc.example <vpc-id>
+    arubacloud_vpc Data Source - ArubaCloud:
+        subCategory: Network
+        description: Retrieves information about an existing ArubaCloud VPC (Virtual Private Cloud).
+        name: arubacloud_vpc Data Source - ArubaCloud
+        title: arubacloud_vpc Data Source - ArubaCloud
+        argumentDocs:
+            id: (String) Unique identifier of the VPC to look up.
+            location: (String) Region identifier for the resource (e.g., ITBG-Bergamo).
+            name: (String) Display name for the VPC.
+            project_id: (String) ID of the project that owns this resource.
+            tags: (List of String) List of string tags attached to the resource.
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+        importStatements: []
+    arubacloud_vpcpeering:
+        subCategory: Network
+        description: Manages an ArubaCloud VPC Peering connection between two VPCs, enabling private routing between them.
+        name: arubacloud_vpcpeering
+        title: arubacloud_vpcpeering Resource - ArubaCloud
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "location": "example-location",
+                  "name": "example-vpc-peering",
+                  "peer_vpc": "peer-vpc-id",
+                  "tags": [
+                    "tag1",
+                    "tag2"
+                  ]
+                }
+        argumentDocs:
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the VPC peering.
+            peer_vpc: (String) ID or URI of the remote peer VPC to connect to.
+            project_id: (String) ID of the project that owns this resource.
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources (e.g., as a *_uri_ref attribute).
+            vpc_id: (String) ID of the local VPC initiating this peering connection.
+        importStatements:
+            - terraform import arubacloud_vpcpeering.example <vpcpeering-id>
+    arubacloud_vpcpeering Data Source - ArubaCloud:
+        subCategory: Network
+        description: Retrieves information about an existing ArubaCloud VPC Peering connection.
+        name: arubacloud_vpcpeering Data Source - ArubaCloud
+        title: arubacloud_vpcpeering Data Source - ArubaCloud
+        argumentDocs:
+            id: (String) Unique identifier of the VPC peering to look up.
+            name: (String) Display name for the VPC peering.
+            project_id: (String) ID of the project that owns this resource.
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+            vpc_id: (String) ID of the local VPC this peering belongs to.
+        importStatements: []
+    arubacloud_vpcpeeringroute Data Source - ArubaCloud:
+        subCategory: Network
+        description: Retrieves information about an existing ArubaCloud VPC Peering Route.
+        name: arubacloud_vpcpeeringroute Data Source - ArubaCloud
+        title: arubacloud_vpcpeeringroute Data Source - ArubaCloud
+        argumentDocs:
+            id: (String) Unique identifier of the VPC peering route to look up (same as the route name).
+            name: (String) Display name for the VPC peering route.
+            project_id: (String) ID of the project that owns this resource.
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+            vpc_id: (String) ID of the VPC this peering route belongs to.
+            vpc_peering_id: (String) ID of the VPC peering connection this route belongs to.
+        importStatements: []
+    arubacloud_vpcpeeringroute Resource - ArubaCloud:
+        subCategory: Network
+        description: Manages a route entry within an ArubaCloud VPC Peering connection.
+        name: arubacloud_vpcpeeringroute Resource - ArubaCloud
+        title: arubacloud_vpcpeeringroute Resource - ArubaCloud
+        argumentDocs:
+            billing_period: '(String) Billing cycle for the resource. Accepted values: Hour, Month, Year.'
+            id: (String) Computed by the API. Unique identifier for the resource.
+            local_network_address: (String) Local network CIDR that is reachable on this side of the peering (e.g., 10.0.1.0/24).
+            name: (String) Display name for the VPC peering route.
+            project_id: (String) ID of the project that owns this resource.
+            remote_network_address: (String) Remote network CIDR reachable through the peering connection (e.g., 10.0.2.0/24).
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources (e.g., as a *_uri_ref attribute).
+            vpc_id: (String) ID of the VPC this peering route belongs to.
+            vpc_peering_id: (String) ID of the VPC peering connection this route belongs to.
+        importStatements:
+            - terraform import arubacloud_vpcpeeringroute.example <vpcpeeringroute-id>
+    arubacloud_vpnroute:
+        subCategory: Network
+        description: Manages a static route associated with an ArubaCloud VPN Tunnel.
+        name: arubacloud_vpnroute
+        title: arubacloud_vpnroute Resource - ArubaCloud
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "location": "ITBG-Bergamo",
+                  "name": "example-vpn-route",
+                  "project_id": "your-project-id",
+                  "properties": {
+                    "cloud_subnet": "10.0.1.0/24",
+                    "on_prem_subnet": "192.168.1.0/24"
+                  },
+                  "vpn_tunnel_id": "your-vpn-tunnel-id"
+                }
+        argumentDocs:
+            cloud_subnet: (String) CIDR of the ArubaCloud-side subnet to route over this tunnel (e.g., 10.0.1.0/24).
+            id: (String) Computed by the API. Unique identifier for the resource.
+            location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the VPN route.
+            on_prem_subnet: (String) CIDR of the on-premises subnet reachable through this tunnel (e.g., 192.168.1.0/24).
+            project_id: (String) ID of the project that owns this resource.
+            properties: (Attributes) Routing properties for the VPN route. (see below for nested schema)
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources (e.g., as a *_uri_ref attribute).
+            vpn_tunnel_id: (String) ID of the VPN tunnel this route is associated with.
+        importStatements:
+            - terraform import arubacloud_vpnroute.example <vpnroute-id>
+    arubacloud_vpnroute Data Source - ArubaCloud:
+        subCategory: Network
+        description: Retrieves information about an existing ArubaCloud VPN Route.
+        name: arubacloud_vpnroute Data Source - ArubaCloud
+        title: arubacloud_vpnroute Data Source - ArubaCloud
+        argumentDocs:
+            destination: (String) CIDR of the ArubaCloud-side subnet routed over this tunnel (maps to cloud_subnet).
+            gateway: (String) CIDR of the on-premises subnet reachable through this tunnel (maps to on_prem_subnet).
+            id: (String) Unique identifier of the VPN route to look up.
+            name: (String) Display name for the VPN route.
+            project_id: (String) ID of the project that owns this resource.
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+            vpn_tunnel_id: (String) ID of the VPN tunnel this route is associated with.
+        importStatements: []
+    arubacloud_vpntunnel:
+        subCategory: Network
+        description: Manages an ArubaCloud VPN Tunnel — an IPSec site-to-site VPN connection between an ArubaCloud VPC and an external network.
+        name: arubacloud_vpntunnel
+        title: arubacloud_vpntunnel Resource - ArubaCloud
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "location": "ITBG-Bergamo",
+                  "name": "example-vpn-tunnel",
+                  "project_id": "your-project-id",
+                  "properties": {
+                    "vpn_client_protocol": "ikev2",
+                    "vpn_type": "Site-To-Site"
+                  }
+                }
+        argumentDocs:
+            billing_period: '(String) Billing cycle for the resource. Accepted values: Hour, Month, Year.'
+            cidr: (String) CIDR block of the subnet (e.g. 192.168.10.0/24). Required by the API.
+            cloud_site: (String) Pre-shared key for the ArubaCloud side of the tunnel.
+            dh_group: '(String) IKE Diffie-Hellman group. Use the numeric group identifier: "1", "2", "5", "14" … "32". The common choice for IKEv2 is "14" (MODP-2048).'
+            dpd_action: (String) Dead Peer Detection action on failure (e.g., restart).
+            dpd_interval: (Number) DPD keep-alive interval in seconds.
+            dpd_timeout: (Number) DPD timeout before the peer is considered dead, in seconds.
+            encryption: (String) ESP encryption algorithm (e.g., aes256).
+            esp: (Attributes) ESP (Encapsulating Security Payload) phase-2 settings. (see below for nested schema)
+            hash: (String) ESP integrity/hash algorithm (e.g., sha256).
+            id: (String) Computed by the API. Unique identifier for the resource.
+            ike: (Attributes) IKE (Internet Key Exchange) phase-1 settings. (see below for nested schema)
+            ip_configurations: (Attributes) Network references for the VPN tunnel — VPC, subnet, and public IP. (see below for nested schema)
+            lifetime: (Number) ESP phase-2 lifetime in seconds.
+            location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). See the available locations and zones.
+            name: (String) Display name for the VPN tunnel.
+            on_prem_site: (String) Pre-shared key for the on-premises side of the tunnel.
+            peer_client_public_ip: (String) Public IP address of the remote peer (on-premises gateway).
+            pfs: (String) ESP Perfect Forward Secrecy group. Use "enable", "disable", or "dh-group<N>" (e.g. "dh-group14" for MODP-2048).
+            project_id: (String) ID of the project that owns this resource.
+            properties: (Attributes) Configuration properties for the VPN tunnel. (see below for nested schema)
+            properties.vpn_client_settings.psk.secret: — sent to the API but not returned in read responses.
+            psk: (Attributes) Pre-Shared Key (PSK) authentication settings. (see below for nested schema)
+            public_ip: (Attributes) Reference to the elastic public IP assigned to this tunnel. (see below for nested schema)
+            secret: (String) Shared secret used to authenticate the VPN tunnel. Write-only — this value is sent to the API but is not returned in subsequent read responses.
+            subnet: (Attributes) Reference to the subnet used by this tunnel. (see below for nested schema)
+            tags: (List of String) List of string tags attached to the resource for filtering and organisation.
+            timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
+            uri: (String) Computed by the API. Full resource URI used as a reference value in other resources (e.g., as a *_uri_ref attribute).
+            vpc: (Attributes) Reference to the VPC this tunnel is attached to. (see below for nested schema)
+            vpn_client_protocol: '(String) IKE protocol version. Accepted values: ikev2.'
+            vpn_client_settings: (Attributes) IKE/ESP/PSK client settings for the VPN tunnel. (see below for nested schema)
+            vpn_type: '(String) Type of VPN tunnel. Accepted values: Site-To-Site.'
+        importStatements:
+            - terraform import arubacloud_vpntunnel.example <vpntunnel-id>
+    arubacloud_vpntunnel Data Source - ArubaCloud:
+        subCategory: Network
+        description: Retrieves information about an existing ArubaCloud VPN Tunnel.
+        name: arubacloud_vpntunnel Data Source - ArubaCloud
+        title: arubacloud_vpntunnel Data Source - ArubaCloud
+        argumentDocs:
+            id: (String) Unique identifier of the VPN tunnel to look up.
+            name: (String) Display name for the VPN tunnel.
+            project_id: (String) ID of the project that owns this resource.
+            remote_peer: (String) Public IP address of the remote peer (on-premises gateway).
+            status: (String) Current operational status of the VPN tunnel.
+            uri: (String) Computed by the API. Full resource URI. Use this value in *_uri_ref attributes of other resources.
+        importStatements: []

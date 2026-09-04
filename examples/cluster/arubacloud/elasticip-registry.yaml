@@ -1,0 +1,16 @@
+apiVersion: arubacloud.crossplane.io/v1alpha1
+kind: Elasticip
+metadata:
+  name: registry-eip
+  namespace: crossplane-system
+spec:
+  forProvider:
+    name: registry-eip
+    location: ITBG-Bergamo
+    billingPeriod: Hour
+    tags:
+      - crossplane
+    projectIdRef:
+      name: my-project
+  providerConfigRef:
+    name: default

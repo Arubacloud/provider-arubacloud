@@ -1,0 +1,22 @@
+apiVersion: arubacloud.crossplane.io/v1alpha1
+kind: Dbaasuser
+metadata:
+  name: appuser
+spec:
+  forProvider:
+    username: appuser
+    projectIdRef:
+      name: my-project
+    dbaasIdRef:
+      name: my-db-cluster
+    # passwordSecretRef is handled by Upjet as a SecretKeySelector.
+    # The password is also surfaced in the connection secret after creation.
+    passwordSecretRef:
+      name: db-user-credentials
+      namespace: default
+      key: password
+  writeConnectionSecretToRef:
+    name: appuser-connection
+    namespace: default
+  providerConfigRef:
+    name: default

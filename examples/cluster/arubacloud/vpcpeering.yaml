@@ -1,0 +1,20 @@
+apiVersion: arubacloud.crossplane.io/v1alpha1
+kind: Vpcpeering
+metadata:
+  name: main-to-secondary
+  namespace: crossplane-system
+spec:
+  forProvider:
+    name: main-to-secondary
+    location: ITBG-Bergamo
+    tags:
+      - crossplane
+    projectIdRef:
+      name: my-project
+    vpcIdRef:
+      name: main-vpc
+    # peerVpcRef resolves to a VPC ID used in the peer_vpc field.
+    peerVpcRef:
+      name: secondary-vpc
+  providerConfigRef:
+    name: default

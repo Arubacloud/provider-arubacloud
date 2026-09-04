@@ -1,0 +1,13 @@
+apiVersion: arubacloud.crossplane.io/v1alpha1
+kind: Database
+metadata:
+  name: appdb
+spec:
+  forProvider:
+    name: appdb
+    projectIdRef:
+      name: my-project
+    dbaasIdRef:
+      name: my-db-cluster
+  providerConfigRef:
+    name: default

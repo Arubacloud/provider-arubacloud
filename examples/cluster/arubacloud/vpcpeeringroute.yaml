@@ -1,0 +1,20 @@
+apiVersion: arubacloud.crossplane.io/v1alpha1
+kind: Vpcpeeringroute
+metadata:
+  name: peering-route-10-0-0
+  namespace: crossplane-system
+spec:
+  forProvider:
+    name: peering-route-10-0-0
+    location: ITBG-Bergamo
+    projectIdRef:
+      name: my-project
+    vpcIdRef:
+      name: main-vpc
+    vpcPeeringIdRef:
+      name: main-to-secondary
+    # destination and nextHop are REQUIRES VERIFICATION - check schema
+    destination: "10.0.0.0/24"
+    nextHop: "192.168.1.1"
+  providerConfigRef:
+    name: default

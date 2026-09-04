@@ -1,0 +1,46 @@
+apiVersion: arubacloud.crossplane.io/v1alpha1
+kind: Kaas
+metadata:
+  name: my-cluster
+spec:
+  forProvider:
+    name: my-cluster
+    location: ITBG-Bergamo
+    billingPeriod: Hour
+    tags:
+      - crossplane
+
+    projectIdRef:
+      name: my-project
+
+    network:
+      # vpcUriRefRef resolves the VPC URI via status.atProvider.uri
+      vpcUriRefRef:
+        name: main-vpc
+      subnetUriRefRef:
+        name: private-subnet
+      # KaaS creates its own security group with this name — do not reference an existing one
+      securityGroupName: kaas-sg
+      nodeCidr:
+        address: "192.168.100.0/24"
+        name: node-network
+      podCidr: "10.244.0.0/16"
+
+    settings:
+      kubernetesVersion: "1.33.2"
+      ha: false
+      nodePools:
+        - name: pool-1
+          instance: K2A4
+          nodes: 2
+          zone: ITBG-1
+          autoscaling: false
+
+  # kubeconfig is exposed in the connection secret automatically.
+  # management_ip is added via AdditionalConnectionDetailsFn.
+  writeConnectionSecretToRef:
+    name: my-cluster-kubeconfig
+    namespace: default
+
+  providerConfigRef:
+    name: default

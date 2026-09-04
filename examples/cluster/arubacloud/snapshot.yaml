@@ -1,0 +1,19 @@
+apiVersion: arubacloud.crossplane.io/v1alpha1
+kind: Snapshot
+metadata:
+  name: boot-vol-snap
+  namespace: crossplane-system
+spec:
+  forProvider:
+    name: boot-vol-snap
+    location: ITBG-Bergamo
+    billingPeriod: Hour
+    tags:
+      - crossplane
+    projectIdRef:
+      name: my-project
+    # volumeUriRef resolves the BlockStorage uri and injects it into volume_uri.
+    volumeUriRef:
+      name: boot-vol
+  providerConfigRef:
+    name: default

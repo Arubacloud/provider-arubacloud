@@ -1,0 +1,27 @@
+apiVersion: arubacloud.crossplane.io/v1alpha1
+kind: Schedulejob
+metadata:
+  name: weekly-cleanup
+  namespace: crossplane-system
+spec:
+  forProvider:
+    name: weekly-cleanup
+    location: ITBG-Bergamo
+    tags:
+      - crossplane
+    projectIdRef:
+      name: my-project
+    properties:
+      enabled: true
+      # Use Recurring for declarative jobs. OneShot jobs require
+      # managementPolicies: [Create, Observe] - see docs/limitations.md.
+      scheduleJobType: Recurring
+      cron: "0 2 * * 0"
+      steps:
+        - name: cleanup-step
+          resourceUri: /projects/proj-xyz/compute/cloudServers/srv-abc
+          actionUri: /actions/reboot
+          httpVerb: POST
+          body: "{}"
+  providerConfigRef:
+    name: default

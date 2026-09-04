@@ -1,0 +1,21 @@
+apiVersion: arubacloud.crossplane.io/v1alpha1
+kind: Backup
+metadata:
+  name: boot-vol-backup
+  namespace: crossplane-system
+spec:
+  forProvider:
+    name: boot-vol-backup
+    location: ITBG-Bergamo
+    type: Standard
+    retentionDays: 7
+    billingPeriod: Hour
+    tags:
+      - crossplane
+    projectIdRef:
+      name: my-project
+    # volumeIdRef resolves the BlockStorage id for the volume_id field.
+    volumeIdRef:
+      name: boot-vol
+  providerConfigRef:
+    name: default

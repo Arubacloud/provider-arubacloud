@@ -1,0 +1,25 @@
+apiVersion: arubacloud.crossplane.io/v1alpha1
+kind: Restore
+metadata:
+  name: boot-vol-restore
+  namespace: crossplane-system
+spec:
+  # WARNING: Restore is a one-shot imperative operation.
+  # After creation set managementPolicies: [Observe] to prevent Crossplane
+  # from re-triggering the restore on each reconcile. See docs/limitations.md.
+  managementPolicies:
+    - Create
+    - Observe
+  forProvider:
+    name: boot-vol-restore
+    location: ITBG-Bergamo
+    tags:
+      - crossplane
+    projectIdRef:
+      name: my-project
+    backupIdRef:
+      name: boot-vol-backup
+    volumeIdRef:
+      name: boot-vol
+  providerConfigRef:
+    name: default

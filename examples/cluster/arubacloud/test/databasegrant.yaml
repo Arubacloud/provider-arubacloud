@@ -1,0 +1,20 @@
+apiVersion: arubacloud.crossplane.io/v1alpha1
+kind: Databasegrant
+metadata:
+  name: appuser-on-appdb
+spec:
+  forProvider:
+    projectIdRef:
+      name: my-project
+    dbaasIdRef:
+      name: my-db-cluster
+    # databaseRef resolves the Database external name (= database name in ArubaCloud).
+    databaseRef:
+      name: appdb
+    # userIdRef resolves the DBaaSUser external name (= username).
+    userIdRef:
+      name: appuser
+    # Accepted values: liteadmin, readwrite, readonly
+    role: liteadmin
+  providerConfigRef:
+    name: default

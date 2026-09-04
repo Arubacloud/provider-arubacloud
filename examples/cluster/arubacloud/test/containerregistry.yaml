@@ -1,0 +1,39 @@
+apiVersion: arubacloud.crossplane.io/v1alpha1
+kind: Containerregistry
+metadata:
+  name: my-registry
+spec:
+  forProvider:
+    name: my-registry
+    location: ITBG-Bergamo
+    billingPeriod: Hour
+    tags:
+      - crossplane
+
+    projectIdRef:
+      name: my-project
+
+    network:
+      # registry-eip is a dedicated elastic IP — do not share with cloudserver
+      publicIpUriRefRef:
+        name: registry-eip
+      vpcUriRefRef:
+        name: main-vpc
+      subnetUriRefRef:
+        name: private-subnet
+      securityGroupUriRefRef:
+        name: web-sg
+
+    storage:
+      # registry-vol is a Standard data volume (no OS image) — not the cloudserver boot volume
+      blockStorageUriRefRef:
+        name: registry-vol
+
+    settings:
+      # Must not be "admin" (reserved by the API)
+      adminUser: registry-admin
+      # Accepted values: Small, Medium, HighPerf
+      concurrentUsersFlavor: Small
+
+  providerConfigRef:
+    name: default
