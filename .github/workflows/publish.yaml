@@ -4,10 +4,18 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version tag to publish (e.g. v0.0.5). Must match an existing git tag."
+        required: true
 
 env:
   # publish.artifacts in the makelib is gated on BRANCH_NAME being main/master/release-*
   BRANCH_NAME: main
+  # Pin VERSION to the tag name so git describe cannot pick the wrong tag when
+  # multiple tags share the same commit (e.g. v0.0.4 and v0.0.6 at the same SHA).
+  VERSION: ${{ github.event.inputs.version || github.ref_name }}
 
 jobs:
   publish:
@@ -20,8 +28,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.inputs.version || github.ref_name }}
           submodules: true
-          # fetch full history so git describe resolves the tag for VERSION
           fetch-depth: 0
 
       - name: Setup Go

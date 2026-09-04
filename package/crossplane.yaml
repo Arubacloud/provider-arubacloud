@@ -37,7 +37,7 @@ metadata:
       metadata:
         name: provider-arubacloud
       spec:
-        package: xpkg.upbound.io/arubacloud/provider-arubacloud:v0.0.4
+        package: xpkg.upbound.io/arubacloud/provider-arubacloud:v0.0.6
       ```
 
       Wait until the provider is healthy:
