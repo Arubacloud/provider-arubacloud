@@ -139,6 +139,10 @@ jobs:
       - name: Vendor Dependencies
         run: make vendor vendor.check
 
+      - name: Debug generate output
+        run: make generate; git status --short; git diff
+        continue-on-error: true
+
       - name: Check Diff
         run: make check-diff
 
