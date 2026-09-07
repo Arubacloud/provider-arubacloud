@@ -7,6 +7,7 @@ spec:
   forProvider:
     name: boot-vol
     location: ITBG-Bergamo
+    # Increasing sizeGb is supported in-place. Decreasing it forces replacement (since v1.1.0).
     sizeGb: 100
     billingPeriod: Hour
     zone: ITBG-1

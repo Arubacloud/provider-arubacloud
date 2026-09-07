@@ -98,3 +98,29 @@ spec:
         value: "0.0.0.0/0"
   providerConfigRef:
     name: default
+---
+apiVersion: arubacloud.crossplane.io/v1alpha1
+kind: Securityrule
+metadata:
+  name: allow-icmp
+  namespace: crossplane-system
+spec:
+  forProvider:
+    name: allow-icmp
+    location: ITBG-Bergamo
+    projectIdRef:
+      name: my-project
+    vpcIdRef:
+      name: main-vpc
+    securityGroupIdRef:
+      name: web-sg
+    properties:
+      direction: Ingress
+      protocol: ICMP
+      # port defaults to "*" for ICMP and ANY protocols (since v1.1.0); explicit here for clarity.
+      port: "*"
+      target:
+        kind: Ip
+        value: "0.0.0.0/0"
+  providerConfigRef:
+    name: default

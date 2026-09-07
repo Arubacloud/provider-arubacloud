@@ -36,5 +36,6 @@ spec:
       bootVolumeUriRefRef:
         name: boot-vol
 
+  # status.atProvider.privateIp is populated once the server is provisioned (since v1.1.0).
   providerConfigRef:
     name: default
