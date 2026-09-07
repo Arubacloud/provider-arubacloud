@@ -140,7 +140,15 @@ jobs:
         run: make vendor vendor.check
 
       - name: Check Diff
-        run: make check-diff
+        run: |
+          make generate
+          if git status --porcelain | grep .; then
+            echo "FAIL: uncommitted changes after make generate:"
+            git status --porcelain
+            git diff HEAD
+            exit 1
+          fi
+          echo "OK: branch is clean"
 
   unit-tests:
     runs-on: ubuntu-24.04

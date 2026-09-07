@@ -208,6 +208,7 @@ resources:
             network: (Attributes) Network configuration for the CloudServer. (see below for nested schema)
             private_ip: (String) DHCP-assigned private IPv4 address of the CloudServer, as returned by the API.
             project_id: (String) ID of the project that owns this resource. Changing this value forces a new resource.
+            public_ip: (String) Public IP address assigned to this CloudServer via the associated Elastic IP (network.elastic_ip_uri_ref). Populated only when an Elastic IP is attached and has been assigned an address. Equivalent to the address attribute of the associated arubacloud_elasticip resource.
             securitygroup_uri_refs: (List of String) List of security group URIs to apply to this CloudServer. Reference the uri attribute of each arubacloud_securitygroup resource. Changing this value forces a new resource.
             settings: (Attributes) Compute and access settings for the CloudServer. (see below for nested schema)
             storage: (Attributes) Storage configuration for the CloudServer. (see below for nested schema)
@@ -1037,7 +1038,7 @@ resources:
             kind: '(String) Type of the target endpoint. Accepted values: IP, SecurityGroup (case-insensitive — the value is normalised before sending to the API). (Immutable — changing this value forces the resource to be destroyed and re-created.)'
             location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). See the available locations and zones. (Immutable — changing this value forces the resource to be destroyed and re-created.)
             name: (String) Display name for the security rule.
-            port: (String) Port or port range for TCP/UDP (e.g., 80 or 8080-8090). Use 0 for ICMP or ANY. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            port: (String) Port or port range for TCP/UDP (e.g., 80 or 8080-8090). Defaults to * (all ports) when omitted — the API normalises an omitted port to *, so the default keeps plan and state consistent. (Immutable — changing this value forces the resource to be destroyed and re-created.)
             project_id: (String) ID of the project that owns this resource. (Immutable — changing this value forces the resource to be destroyed and re-created.)
             properties: (Attributes) Traffic-matching properties of the security rule. All fields are immutable after creation — to change any of them, destroy and re-create the rule. (see below for nested schema)
             protocol: '(String) IP protocol. Accepted values: TCP, UDP, ICMP, ANY (case-insensitive — the value is normalised before sending to the API). (Immutable — changing this value forces the resource to be destroyed and re-created.)'
