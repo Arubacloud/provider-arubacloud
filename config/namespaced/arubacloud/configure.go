@@ -129,6 +129,9 @@ func configureCloudServer(p *ujconfig.Provider) {
 			if ip, ok := attr["private_ip"].(string); ok && ip != "" {
 				conn["private_ip"] = []byte(ip)
 			}
+			if ip, ok := attr["public_ip"].(string); ok && ip != "" {
+				conn["public_ip"] = []byte(ip)
+			}
 			return conn, nil
 		}
 	})

@@ -965,6 +965,11 @@ func (in *CloudserverObservation) DeepCopyInto(out *CloudserverObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.PublicIP != nil {
+		in, out := &in.PublicIP, &out.PublicIP
+		*out = new(string)
+		**out = **in
+	}
 	if in.Settings != nil {
 		in, out := &in.Settings, &out.Settings
 		*out = new(SettingsObservation)
