@@ -15,7 +15,6 @@ spec:
   # The assigned public IP address is exposed in the connection secret.
   writeConnectionSecretToRef:
     name: web-eip-address
-    namespace: default
   providerConfigRef:
     kind: ProviderConfig
     name: default

@@ -2,6 +2,7 @@ apiVersion: arubacloud.crossplane.io/v1alpha1
 kind: Blockstorage
 metadata:
   name: boot-vol
+  namespace: default
 spec:
   forProvider:
     name: boot-vol

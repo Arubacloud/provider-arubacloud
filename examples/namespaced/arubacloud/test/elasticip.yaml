@@ -2,6 +2,7 @@ apiVersion: arubacloud.crossplane.io/v1alpha1
 kind: Elasticip
 metadata:
   name: web-eip
+  namespace: default
 spec:
   forProvider:
     name: web-eip
@@ -14,7 +15,6 @@ spec:
   # The assigned public IP address is exposed in the connection secret.
   writeConnectionSecretToRef:
     name: web-eip-address
-    namespace: default
   providerConfigRef:
     kind: ProviderConfig
     name: default

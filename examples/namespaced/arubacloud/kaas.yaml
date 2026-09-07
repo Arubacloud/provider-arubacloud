@@ -42,7 +42,6 @@ spec:
   # management_ip is added via AdditionalConnectionDetailsFn.
   writeConnectionSecretToRef:
     name: my-cluster-kubeconfig
-    namespace: default
 
   providerConfigRef:
     kind: ProviderConfig

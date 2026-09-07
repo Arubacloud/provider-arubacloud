@@ -2,6 +2,7 @@ apiVersion: arubacloud.crossplane.io/v1alpha1
 kind: Cloudserver
 metadata:
   name: web-01
+  namespace: default
 spec:
   forProvider:
     name: web-01
