@@ -139,12 +139,20 @@ jobs:
       - name: Vendor Dependencies
         run: make vendor vendor.check
 
-      - name: Debug generate output
-        run: make generate; git status --short; git diff
-        continue-on-error: true
-
-      - name: Check Diff
-        run: make check-diff
+      - name: Check Diff (verbose)
+        run: |
+          make generate
+          echo "=== git status after generate ==="
+          git status --porcelain
+          echo "=== git diff after generate ==="
+          git diff
+          echo "=== check ==="
+          if git status --porcelain | grep .; then
+            echo "DIRTY FILES DETECTED - listing full diff:"
+            git diff HEAD
+            exit 1
+          fi
+          echo "Branch is clean."
 
   unit-tests:
     runs-on: ubuntu-24.04
