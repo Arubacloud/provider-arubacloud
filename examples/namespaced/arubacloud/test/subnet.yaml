@@ -2,6 +2,7 @@ apiVersion: arubacloud.crossplane.io/v1alpha1
 kind: Subnet
 metadata:
   name: private-subnet
+  namespace: default
 spec:
   forProvider:
     name: private-subnet

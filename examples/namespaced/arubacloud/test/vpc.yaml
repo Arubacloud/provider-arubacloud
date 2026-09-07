@@ -2,6 +2,7 @@ apiVersion: arubacloud.crossplane.io/v1alpha1
 kind: VPC
 metadata:
   name: main-vpc
+  namespace: default
 spec:
   forProvider:
     name: main-vpc

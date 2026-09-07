@@ -2,6 +2,7 @@ apiVersion: arubacloud.crossplane.io/v1alpha1
 kind: Keypair
 metadata:
   name: my-keypair
+  namespace: default
 spec:
   forProvider:
     name: my-keypair
@@ -16,7 +17,6 @@ spec:
     #     --from-literal=value="ssh-ed25519 AAAA... user@host"
     valueSecretRef:
       name: my-keypair-pub
-      namespace: crossplane-system
       key: value
   providerConfigRef:
     kind: ProviderConfig

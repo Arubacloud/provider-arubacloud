@@ -2,6 +2,7 @@ apiVersion: arubacloud.crossplane.io/v1alpha1
 kind: Securitygroup
 metadata:
   name: web-sg
+  namespace: default
 spec:
   forProvider:
     name: web-sg

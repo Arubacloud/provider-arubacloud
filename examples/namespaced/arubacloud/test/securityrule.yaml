@@ -3,6 +3,7 @@ apiVersion: arubacloud.crossplane.io/v1alpha1
 kind: Securityrule
 metadata:
   name: allow-ssh
+  namespace: default
 spec:
   forProvider:
     name: allow-ssh
@@ -28,6 +29,7 @@ apiVersion: arubacloud.crossplane.io/v1alpha1
 kind: Securityrule
 metadata:
   name: allow-http
+  namespace: default
 spec:
   forProvider:
     name: allow-http
@@ -53,6 +55,7 @@ apiVersion: arubacloud.crossplane.io/v1alpha1
 kind: Securityrule
 metadata:
   name: allow-https
+  namespace: default
 spec:
   forProvider:
     name: allow-https
@@ -78,6 +81,7 @@ apiVersion: arubacloud.crossplane.io/v1alpha1
 kind: Securityrule
 metadata:
   name: allow-egress
+  namespace: default
 spec:
   forProvider:
     name: allow-egress
@@ -103,6 +107,7 @@ apiVersion: arubacloud.crossplane.io/v1alpha1
 kind: Securityrule
 metadata:
   name: allow-icmp
+  namespace: default
 spec:
   forProvider:
     name: allow-icmp

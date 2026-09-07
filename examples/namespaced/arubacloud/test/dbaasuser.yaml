@@ -13,11 +13,9 @@ spec:
     # The password is also surfaced in the connection secret after creation.
     passwordSecretRef:
       name: db-user-credentials
-      namespace: default
       key: password
   writeConnectionSecretToRef:
     name: appuser-connection
-    namespace: default
   providerConfigRef:
     kind: ProviderConfig
     name: default
