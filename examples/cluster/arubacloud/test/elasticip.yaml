@@ -16,4 +16,5 @@ spec:
     name: web-eip-address
     namespace: default
   providerConfigRef:
+    kind: ClusterProviderConfig
     name: default

@@ -18,4 +18,5 @@ spec:
     volumeIdRef:
       name: boot-vol
   providerConfigRef:
+    kind: ProviderConfig
     name: default

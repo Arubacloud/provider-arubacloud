@@ -17,4 +17,5 @@ spec:
     peerVpcRef:
       name: secondary-vpc
   providerConfigRef:
+    kind: ProviderConfig
     name: default

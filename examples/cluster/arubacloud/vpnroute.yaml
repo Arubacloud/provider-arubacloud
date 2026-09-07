@@ -14,4 +14,5 @@ spec:
     # destination REQUIRES VERIFICATION - check VPNRoute schema
     destination: "10.0.0.0/24"
   providerConfigRef:
+    kind: ProviderConfig
     name: default

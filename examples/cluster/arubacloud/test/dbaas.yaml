@@ -25,4 +25,5 @@ spec:
     storage:
       sizeGb: 20
   providerConfigRef:
+    kind: ClusterProviderConfig
     name: default

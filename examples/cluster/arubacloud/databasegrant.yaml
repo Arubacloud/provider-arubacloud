@@ -18,4 +18,5 @@ spec:
     # Accepted values: liteadmin, readwrite, readonly
     role: liteadmin
   providerConfigRef:
+    kind: ProviderConfig
     name: default

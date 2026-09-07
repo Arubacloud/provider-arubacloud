@@ -10,4 +10,5 @@ spec:
       - crossplane
       - example
   providerConfigRef:
+    kind: ClusterProviderConfig
     name: default

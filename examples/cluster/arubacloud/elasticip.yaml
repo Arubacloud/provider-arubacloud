@@ -17,4 +17,5 @@ spec:
     name: web-eip-address
     namespace: default
   providerConfigRef:
+    kind: ProviderConfig
     name: default

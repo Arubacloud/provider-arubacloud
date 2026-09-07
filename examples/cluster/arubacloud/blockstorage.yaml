@@ -19,4 +19,5 @@ spec:
     projectIdRef:
       name: my-project
   providerConfigRef:
+    kind: ProviderConfig
     name: default

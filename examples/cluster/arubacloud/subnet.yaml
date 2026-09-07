@@ -27,4 +27,5 @@ spec:
     vpcIdRef:
       name: main-vpc
   providerConfigRef:
+    kind: ProviderConfig
     name: default

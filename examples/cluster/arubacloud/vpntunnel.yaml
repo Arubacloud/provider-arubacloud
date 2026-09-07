@@ -45,4 +45,5 @@ spec:
           onPremSite: "onprem-side-id"
           secret: "changeme"
   providerConfigRef:
+    kind: ProviderConfig
     name: default

@@ -12,4 +12,5 @@ spec:
     databaseRef:
       name: appdb
   providerConfigRef:
+    kind: ProviderConfig
     name: default

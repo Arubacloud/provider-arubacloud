@@ -20,4 +20,5 @@ spec:
     name: appuser-connection
     namespace: default
   providerConfigRef:
+    kind: ProviderConfig
     name: default

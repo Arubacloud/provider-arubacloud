@@ -24,4 +24,5 @@ spec:
           httpVerb: POST
           body: "{}"
   providerConfigRef:
+    kind: ProviderConfig
     name: default

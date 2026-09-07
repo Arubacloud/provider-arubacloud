@@ -45,4 +45,5 @@ spec:
     namespace: default
 
   providerConfigRef:
+    kind: ProviderConfig
     name: default
