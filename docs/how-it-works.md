@@ -396,7 +396,7 @@ make generate.schema # only if the Terraform provider was updated
 ### Step 4: Write the example manifest
 
 ```yaml
-# examples/cluster/arubacloud/firewall.yaml
+# examples/namespaced/arubacloud/firewall.yaml
 apiVersion: arubacloud.crossplane.io/v1alpha1
 kind: Firewall
 metadata:

@@ -45,5 +45,4 @@ rm -rf apis/namespaced/null
 rm -rf config/cluster/null
 rm -rf config/namespaced/null
 # remove the sample MR example from the template
-rm -rf examples/cluster/null
 rm -rf examples/namespaced/null
