@@ -132,7 +132,7 @@ resources:
             location: (String) Region identifier (e.g., ITBG-Bergamo). See the available locations and zones. (Immutable — changing this value forces the resource to be destroyed and re-created.)
             name: (String) Display name for the block storage volume.
             project_id: (String) ID of the project that owns this resource. (Immutable — changing this value forces the resource to be destroyed and re-created.)
-            size_gb: (Number) Size of the block storage volume in GiB. Must be a positive integer.
+            size_gb: '(Number) Size of the block storage volume in GiB. Must be a positive integer. Growing a volume is applied in place; shrinking forces the volume to be destroyed and re-created, because the API rejects a smaller size (Validation: Size: invalid). A replacement discards the volume''s contents — check the plan before applying.'
             tags: (List of String) List of string tags attached to the resource for filtering and organisation.
             timeout: (String) Per-resource timeout override (e.g. "15m", "1h"). Overrides the provider-level resource_timeout for this resource's Create and Delete operations. Uses Go duration syntax.
             type: '(String) Storage type. Accepted values: Standard, Performance. (Immutable — changing this value forces the resource to be destroyed and re-created.)'
@@ -206,6 +206,7 @@ resources:
             location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). See the available locations and zones. Changing this value forces a new resource.
             name: (String) Display name for the CloudServer. Changing this value forces a new resource.
             network: (Attributes) Network configuration for the CloudServer. (see below for nested schema)
+            private_ip: (String) DHCP-assigned private IPv4 address of the CloudServer, as returned by the API.
             project_id: (String) ID of the project that owns this resource. Changing this value forces a new resource.
             securitygroup_uri_refs: (List of String) List of security group URIs to apply to this CloudServer. Reference the uri attribute of each arubacloud_securitygroup resource. Changing this value forces a new resource.
             settings: (Attributes) Compute and access settings for the CloudServer. (see below for nested schema)
@@ -232,6 +233,7 @@ resources:
             key_pair_uri_ref: (String) URI of the SSH key pair injected at boot.
             location: (String) Region identifier for the resource (e.g., ITBG-Bergamo).
             name: (String) Display name for the CloudServer.
+            private_ip: (String) DHCP-assigned private IPv4 address of the CloudServer, as returned by the API.
             project_id: (String) ID of the project that owns this resource.
             securitygroup_uri_refs: (List of String) List of security group URIs applied to this CloudServer.
             subnet_uri_refs: (List of String) List of subnet URIs attached to this CloudServer.
@@ -283,7 +285,7 @@ resources:
             name: (String) Display name for the container registry.
             network: (Attributes) Network resources attached to the registry. (see below for nested schema)
             project_id: (String) ID of the project that owns this resource.
-            public_ip_uri_ref: (String) URI of the Elastic IP that exposes the registry endpoint (e.g., arubacloud_elasticip.example.uri).
+            public_ip_uri_ref: (String) URI of the Elastic IP that exposes the registry endpoint (e.g., arubacloud_elasticip.example.uri). It can be omitted if not necessary
             security_group_uri_ref: (String) URI of the security group controlling registry traffic (e.g., arubacloud_securitygroup.example.uri).
             settings: (Attributes) Registry configuration settings. Required because admin_user is mandatory. (see below for nested schema)
             storage: (Attributes) Block storage volume that backs the registry image store. (see below for nested schema)
@@ -681,6 +683,7 @@ resources:
             nodes: (Number) Number of worker nodes in the cluster.
             pod_cidr: (String) CIDR block used for pod networking within the cluster (e.g., 10.0.3.0/24).
             project_id: (String) ID of the project that owns this resource. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+            security_group_id: (String) Computed by the API. Unique identifier of the security group created by the KaaS cluster. Use this value as the id input to the arubacloud_securitygroup data source to look up the full security group and obtain its URI.
             security_group_name: (String) Name of the security group applied to cluster nodes.
             settings: (Attributes) Kubernetes version and node-pool configuration. (see below for nested schema)
             subnet_uri_ref: (String) URI of the subnet within the VPC (e.g., arubacloud_subnet.example.uri). (Immutable — changing this value forces the resource to be destroyed and re-created.)
@@ -715,6 +718,7 @@ resources:
             nodes: (Number) Number of worker nodes in the cluster.
             pod_cidr: (String) CIDR block used for pod networking within the cluster.
             project_id: (String) ID of the project that owns this resource.
+            security_group_id: (String) Unique identifier of the security group created by the KaaS cluster. Use this value as the id input to the arubacloud_securitygroup data source.
             security_group_name: (String) Name of the security group applied to cluster nodes.
             subnet_uri_ref: (String) URI of the subnet within the VPC.
             tags: (List of String) List of string tags attached to the resource for filtering and organisation.
@@ -1380,7 +1384,7 @@ resources:
         argumentDocs:
             billing_period: '(String) Billing cycle for the resource. Accepted values: Hour, Month, Year.'
             cidr: (String) CIDR block of the subnet (e.g. 192.168.10.0/24). Required by the API.
-            cloud_site: (String) Pre-shared key for the ArubaCloud side of the tunnel.
+            cloud_site: (String) IKE identity of the ArubaCloud side of the tunnel ("PSK ID Aruba Side" in the control panel). This is an identifier, not a key — the pre-shared key itself goes into secret. Equivalent to leftid/rightid in strongSwan or the local/remote ID in a Fortinet phase-1 configuration.
             dh_group: '(String) IKE Diffie-Hellman group. Use the numeric group identifier: "1", "2", "5", "14" … "32". The common choice for IKEv2 is "14" (MODP-2048).'
             dpd_action: (String) Dead Peer Detection action on failure (e.g., restart).
             dpd_interval: (Number) DPD keep-alive interval in seconds.
@@ -1394,7 +1398,7 @@ resources:
             lifetime: (Number) ESP phase-2 lifetime in seconds.
             location: (String) Region identifier for the resource (e.g., ITBG-Bergamo). See the available locations and zones.
             name: (String) Display name for the VPN tunnel.
-            on_prem_site: (String) Pre-shared key for the on-premises side of the tunnel.
+            on_prem_site: (String) IKE identity of the on-premises side of the tunnel ("PSK ID On Prem Side" in the control panel). This is an identifier, not a key — the pre-shared key itself goes into secret. With some firewalls (e.g. Fortinet) this must be set to the public IP of the on-premises gateway.
             peer_client_public_ip: (String) Public IP address of the remote peer (on-premises gateway).
             pfs: (String) ESP Perfect Forward Secrecy group. Use "enable", "disable", or "dh-group<N>" (e.g. "dh-group14" for MODP-2048).
             project_id: (String) ID of the project that owns this resource.

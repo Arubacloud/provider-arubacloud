@@ -308,12 +308,12 @@ type IkeParameters struct {
 
 type PskInitParameters struct {
 
-	// shared key for the ArubaCloud side of the tunnel.
-	// Pre-shared key for the ArubaCloud side of the tunnel.
+	// shared key itself goes into secret. Equivalent to leftid/rightid in strongSwan or the local/remote ID in a Fortinet phase-1 configuration.
+	// IKE identity of the ArubaCloud side of the tunnel ("PSK ID Aruba Side" in the control panel). This is an **identifier**, not a key — the pre-shared key itself goes into `secret`. Equivalent to `leftid`/`rightid` in strongSwan or the local/remote ID in a Fortinet phase-1 configuration.
 	CloudSite *string `json:"cloudSite,omitempty" tf:"cloud_site,omitempty"`
 
-	// shared key for the on-premises side of the tunnel.
-	// Pre-shared key for the on-premises side of the tunnel.
+	// premises side of the tunnel ("PSK ID On Prem Side" in the control panel). This is an identifier, not a key — the pre-shared key itself goes into secret. With some firewalls (e.g. Fortinet) this must be set to the public IP of the on-premises gateway.
+	// IKE identity of the on-premises side of the tunnel ("PSK ID On Prem Side" in the control panel). This is an **identifier**, not a key — the pre-shared key itself goes into `secret`. With some firewalls (e.g. Fortinet) this must be set to the public IP of the on-premises gateway.
 	OnPremSite *string `json:"onPremSite,omitempty" tf:"on_prem_site,omitempty"`
 
 	// — sent to the API but not returned in read responses.
@@ -323,12 +323,12 @@ type PskInitParameters struct {
 
 type PskObservation struct {
 
-	// shared key for the ArubaCloud side of the tunnel.
-	// Pre-shared key for the ArubaCloud side of the tunnel.
+	// shared key itself goes into secret. Equivalent to leftid/rightid in strongSwan or the local/remote ID in a Fortinet phase-1 configuration.
+	// IKE identity of the ArubaCloud side of the tunnel ("PSK ID Aruba Side" in the control panel). This is an **identifier**, not a key — the pre-shared key itself goes into `secret`. Equivalent to `leftid`/`rightid` in strongSwan or the local/remote ID in a Fortinet phase-1 configuration.
 	CloudSite *string `json:"cloudSite,omitempty" tf:"cloud_site,omitempty"`
 
-	// shared key for the on-premises side of the tunnel.
-	// Pre-shared key for the on-premises side of the tunnel.
+	// premises side of the tunnel ("PSK ID On Prem Side" in the control panel). This is an identifier, not a key — the pre-shared key itself goes into secret. With some firewalls (e.g. Fortinet) this must be set to the public IP of the on-premises gateway.
+	// IKE identity of the on-premises side of the tunnel ("PSK ID On Prem Side" in the control panel). This is an **identifier**, not a key — the pre-shared key itself goes into `secret`. With some firewalls (e.g. Fortinet) this must be set to the public IP of the on-premises gateway.
 	OnPremSite *string `json:"onPremSite,omitempty" tf:"on_prem_site,omitempty"`
 
 	// — sent to the API but not returned in read responses.
@@ -338,13 +338,13 @@ type PskObservation struct {
 
 type PskParameters struct {
 
-	// shared key for the ArubaCloud side of the tunnel.
-	// Pre-shared key for the ArubaCloud side of the tunnel.
+	// shared key itself goes into secret. Equivalent to leftid/rightid in strongSwan or the local/remote ID in a Fortinet phase-1 configuration.
+	// IKE identity of the ArubaCloud side of the tunnel ("PSK ID Aruba Side" in the control panel). This is an **identifier**, not a key — the pre-shared key itself goes into `secret`. Equivalent to `leftid`/`rightid` in strongSwan or the local/remote ID in a Fortinet phase-1 configuration.
 	// +kubebuilder:validation:Optional
 	CloudSite *string `json:"cloudSite,omitempty" tf:"cloud_site,omitempty"`
 
-	// shared key for the on-premises side of the tunnel.
-	// Pre-shared key for the on-premises side of the tunnel.
+	// premises side of the tunnel ("PSK ID On Prem Side" in the control panel). This is an identifier, not a key — the pre-shared key itself goes into secret. With some firewalls (e.g. Fortinet) this must be set to the public IP of the on-premises gateway.
+	// IKE identity of the on-premises side of the tunnel ("PSK ID On Prem Side" in the control panel). This is an **identifier**, not a key — the pre-shared key itself goes into `secret`. With some firewalls (e.g. Fortinet) this must be set to the public IP of the on-premises gateway.
 	// +kubebuilder:validation:Optional
 	OnPremSite *string `json:"onPremSite,omitempty" tf:"on_prem_site,omitempty"`
 

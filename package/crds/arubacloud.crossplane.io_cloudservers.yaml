@@ -1565,6 +1565,11 @@ spec:
                           URI of the VPC to attach this CloudServer to. Reference the `uri` attribute of an `arubacloud_vpc` resource. Changing this value forces a new resource.
                         type: string
                     type: object
+                  privateIp:
+                    description: |-
+                      assigned private IPv4 address of the CloudServer, as returned by the API.
+                      DHCP-assigned private IPv4 address of the CloudServer, as returned by the API.
+                    type: string
                   projectId:
                     description: |-
                       (String) ID of the project that owns this resource. Changing this value forces a new resource.

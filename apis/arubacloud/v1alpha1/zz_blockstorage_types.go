@@ -48,8 +48,8 @@ type BlockstorageInitParameters struct {
 	// +kubebuilder:validation:Optional
 	ProjectIDSelector *v2.NamespacedSelector `json:"projectIdSelector,omitempty" tf:"-"`
 
-	// (Number) Size of the block storage volume in GiB. Must be a positive integer.
-	// Size of the block storage volume in GiB. Must be a positive integer.
+	// created, because the API rejects a smaller size (Validation: Size: invalid). A replacement discards the volume's contents — check the plan before applying.
+	// Size of the block storage volume in GiB. Must be a positive integer. Growing a volume is applied in place; **shrinking forces the volume to be destroyed and re-created**, because the API rejects a smaller size (`Validation: Size: invalid`). A replacement discards the volume's contents — check the plan before applying.
 	SizeGb *float64 `json:"sizeGb,omitempty" tf:"size_gb,omitempty"`
 
 	// (List of String) List of string tags attached to the resource for filtering and organisation.
@@ -98,8 +98,8 @@ type BlockstorageObservation struct {
 	// ID of the project that owns this resource. (Immutable — changing this value forces the resource to be destroyed and re-created.)
 	ProjectID *string `json:"projectId,omitempty" tf:"project_id,omitempty"`
 
-	// (Number) Size of the block storage volume in GiB. Must be a positive integer.
-	// Size of the block storage volume in GiB. Must be a positive integer.
+	// created, because the API rejects a smaller size (Validation: Size: invalid). A replacement discards the volume's contents — check the plan before applying.
+	// Size of the block storage volume in GiB. Must be a positive integer. Growing a volume is applied in place; **shrinking forces the volume to be destroyed and re-created**, because the API rejects a smaller size (`Validation: Size: invalid`). A replacement discards the volume's contents — check the plan before applying.
 	SizeGb *float64 `json:"sizeGb,omitempty" tf:"size_gb,omitempty"`
 
 	// (List of String) List of string tags attached to the resource for filtering and organisation.
@@ -164,8 +164,8 @@ type BlockstorageParameters struct {
 	// +kubebuilder:validation:Optional
 	ProjectIDSelector *v2.NamespacedSelector `json:"projectIdSelector,omitempty" tf:"-"`
 
-	// (Number) Size of the block storage volume in GiB. Must be a positive integer.
-	// Size of the block storage volume in GiB. Must be a positive integer.
+	// created, because the API rejects a smaller size (Validation: Size: invalid). A replacement discards the volume's contents — check the plan before applying.
+	// Size of the block storage volume in GiB. Must be a positive integer. Growing a volume is applied in place; **shrinking forces the volume to be destroyed and re-created**, because the API rejects a smaller size (`Validation: Size: invalid`). A replacement discards the volume's contents — check the plan before applying.
 	// +kubebuilder:validation:Optional
 	SizeGb *float64 `json:"sizeGb,omitempty" tf:"size_gb,omitempty"`
 

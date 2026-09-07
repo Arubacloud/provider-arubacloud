@@ -81,8 +81,8 @@ spec:
                     properties:
                       publicIpUriRef:
                         description: |-
-                          (String) URI of the Elastic IP that exposes the registry endpoint (e.g., arubacloud_elasticip.example.uri).
-                          URI of the Elastic IP that exposes the registry endpoint (e.g., `arubacloud_elasticip.example.uri`).
+                          (String) URI of the Elastic IP that exposes the registry endpoint (e.g., arubacloud_elasticip.example.uri). It can be omitted if not necessary
+                          URI of the Elastic IP that exposes the registry endpoint (e.g., `arubacloud_elasticip.example.uri`). It can be omitted if not necessary
                         type: string
                       publicIpUriRefRef:
                         description: Reference to a Elasticip in arubacloud to populate
@@ -669,8 +669,8 @@ spec:
                     properties:
                       publicIpUriRef:
                         description: |-
-                          (String) URI of the Elastic IP that exposes the registry endpoint (e.g., arubacloud_elasticip.example.uri).
-                          URI of the Elastic IP that exposes the registry endpoint (e.g., `arubacloud_elasticip.example.uri`).
+                          (String) URI of the Elastic IP that exposes the registry endpoint (e.g., arubacloud_elasticip.example.uri). It can be omitted if not necessary
+                          URI of the Elastic IP that exposes the registry endpoint (e.g., `arubacloud_elasticip.example.uri`). It can be omitted if not necessary
                         type: string
                       publicIpUriRefRef:
                         description: Reference to a Elasticip in arubacloud to populate
@@ -1332,8 +1332,8 @@ spec:
                     properties:
                       publicIpUriRef:
                         description: |-
-                          (String) URI of the Elastic IP that exposes the registry endpoint (e.g., arubacloud_elasticip.example.uri).
-                          URI of the Elastic IP that exposes the registry endpoint (e.g., `arubacloud_elasticip.example.uri`).
+                          (String) URI of the Elastic IP that exposes the registry endpoint (e.g., arubacloud_elasticip.example.uri). It can be omitted if not necessary
+                          URI of the Elastic IP that exposes the registry endpoint (e.g., `arubacloud_elasticip.example.uri`). It can be omitted if not necessary
                         type: string
                       securityGroupUriRef:
                         description: |-

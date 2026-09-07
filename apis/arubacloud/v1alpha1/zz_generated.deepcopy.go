@@ -955,6 +955,11 @@ func (in *CloudserverObservation) DeepCopyInto(out *CloudserverObservation) {
 		*out = new(NetworkObservation)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.PrivateIP != nil {
+		in, out := &in.PrivateIP, &out.PrivateIP
+		*out = new(string)
+		**out = **in
+	}
 	if in.ProjectID != nil {
 		in, out := &in.ProjectID, &out.ProjectID
 		*out = new(string)
@@ -4982,6 +4987,11 @@ func (in *KaasNetworkObservation) DeepCopyInto(out *KaasNetworkObservation) {
 	}
 	if in.PodCidr != nil {
 		in, out := &in.PodCidr, &out.PodCidr
+		*out = new(string)
+		**out = **in
+	}
+	if in.SecurityGroupID != nil {
+		in, out := &in.SecurityGroupID, &out.SecurityGroupID
 		*out = new(string)
 		**out = **in
 	}

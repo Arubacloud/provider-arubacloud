@@ -12,10 +12,10 @@ TERRAFORM_VERSION_VALID := $(shell [ "$(TERRAFORM_VERSION)" = "`printf "$(TERRAF
 
 export TERRAFORM_PROVIDER_SOURCE ?= arubacloud/arubacloud
 export TERRAFORM_PROVIDER_REPO ?= https://github.com/Arubacloud/terraform-provider-arubacloud
-export TERRAFORM_PROVIDER_VERSION ?= 1.0.1
+export TERRAFORM_PROVIDER_VERSION ?= 1.1.0
 export TERRAFORM_PROVIDER_DOWNLOAD_NAME ?= terraform-provider-arubacloud
 export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX ?= https://github.com/Arubacloud/terraform-provider-arubacloud/releases/download/v$(TERRAFORM_PROVIDER_VERSION)
-export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-arubacloud_v1.0.1_x5
+export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-arubacloud_v1.1.0_x5
 export TERRAFORM_DOCS_PATH ?= docs
 
 

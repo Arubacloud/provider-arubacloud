@@ -74,6 +74,10 @@ type CloudserverObservation struct {
 	// (Attributes) Network configuration for the CloudServer. (see below for nested schema)
 	Network *NetworkObservation `json:"network,omitempty" tf:"network,omitempty"`
 
+	// assigned private IPv4 address of the CloudServer, as returned by the API.
+	// DHCP-assigned private IPv4 address of the CloudServer, as returned by the API.
+	PrivateIP *string `json:"privateIp,omitempty" tf:"private_ip,omitempty"`
+
 	// (String) ID of the project that owns this resource. Changing this value forces a new resource.
 	// ID of the project that owns this resource. Changing this value forces a new resource.
 	ProjectID *string `json:"projectId,omitempty" tf:"project_id,omitempty"`
