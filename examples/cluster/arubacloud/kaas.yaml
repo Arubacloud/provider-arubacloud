@@ -20,7 +20,8 @@ spec:
         name: main-vpc
       subnetUriRefRef:
         name: private-subnet
-      # KaaS creates its own security group with this name — do not reference an existing one
+      # KaaS creates its own security group with this name — do not reference an existing one.
+      # Its ID is exposed in status.atProvider.network.securityGroupId (since v1.1.0).
       securityGroupName: kaas-sg
       nodeCidr:
         address: "192.168.100.0/24"

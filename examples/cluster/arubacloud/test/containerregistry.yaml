@@ -14,7 +14,9 @@ spec:
       name: my-project
 
     network:
-      # registry-eip is a dedicated elastic IP — do not share with cloudserver
+      # publicIpUriRefRef is optional (since terraform-provider-arubacloud v1.1.0).
+      # Omit it if the registry does not need a public endpoint.
+      # registry-eip is a dedicated elastic IP — do not share with cloudserver.
       publicIpUriRefRef:
         name: registry-eip
       vpcUriRefRef:

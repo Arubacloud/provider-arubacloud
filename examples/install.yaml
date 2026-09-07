@@ -3,4 +3,4 @@ kind: Provider
 metadata:
   name: provider-arubacloud
 spec:
-  package: ghcr.io/arubacloud/provider-arubacloud:v0.3.0
+  package: ghcr.io/arubacloud/provider-arubacloud:v0.0.8
