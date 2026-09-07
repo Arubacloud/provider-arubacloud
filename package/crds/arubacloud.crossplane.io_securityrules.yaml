@@ -168,7 +168,7 @@ spec:
                         type: string
                       port:
                         description: |-
-                          8090). Use 0 for ICMP or ANY. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+                          8090). Defaults to * (all ports) when omitted — the API normalises an omitted port to *, so the default keeps plan and state consistent. (Immutable — changing this value forces the resource to be destroyed and re-created.)
                           Port or port range for TCP/UDP (e.g., `80` or `8080-8090`). Defaults to `*` (all ports) when omitted — the API normalises an omitted port to `*`, so the default keeps plan and state consistent. (Immutable — changing this value forces the resource to be destroyed and re-created.)
                         type: string
                       protocol:
@@ -498,7 +498,7 @@ spec:
                         type: string
                       port:
                         description: |-
-                          8090). Use 0 for ICMP or ANY. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+                          8090). Defaults to * (all ports) when omitted — the API normalises an omitted port to *, so the default keeps plan and state consistent. (Immutable — changing this value forces the resource to be destroyed and re-created.)
                           Port or port range for TCP/UDP (e.g., `80` or `8080-8090`). Defaults to `*` (all ports) when omitted — the API normalises an omitted port to `*`, so the default keeps plan and state consistent. (Immutable — changing this value forces the resource to be destroyed and re-created.)
                         type: string
                       protocol:
@@ -813,7 +813,7 @@ spec:
                         type: string
                       port:
                         description: |-
-                          8090). Use 0 for ICMP or ANY. (Immutable — changing this value forces the resource to be destroyed and re-created.)
+                          8090). Defaults to * (all ports) when omitted — the API normalises an omitted port to *, so the default keeps plan and state consistent. (Immutable — changing this value forces the resource to be destroyed and re-created.)
                           Port or port range for TCP/UDP (e.g., `80` or `8080-8090`). Defaults to `*` (all ports) when omitted — the API normalises an omitted port to `*`, so the default keeps plan and state consistent. (Immutable — changing this value forces the resource to be destroyed and re-created.)
                         type: string
                       protocol:

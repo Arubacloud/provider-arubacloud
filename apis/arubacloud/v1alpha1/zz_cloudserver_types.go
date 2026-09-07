@@ -82,6 +82,7 @@ type CloudserverObservation struct {
 	// ID of the project that owns this resource. Changing this value forces a new resource.
 	ProjectID *string `json:"projectId,omitempty" tf:"project_id,omitempty"`
 
+	// (String) Public IP address assigned to this CloudServer via the associated Elastic IP (network.elastic_ip_uri_ref). Populated only when an Elastic IP is attached and has been assigned an address. Equivalent to the address attribute of the associated arubacloud_elasticip resource.
 	// Public IP address assigned to this CloudServer via the associated Elastic IP (`network.elastic_ip_uri_ref`). Populated only when an Elastic IP is attached and has been assigned an address. Equivalent to the `address` attribute of the associated `arubacloud_elasticip` resource.
 	PublicIP *string `json:"publicIp,omitempty" tf:"public_ip,omitempty"`
 
