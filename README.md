@@ -2,6 +2,8 @@
 
 `provider-arubacloud` is a [Crossplane](https://crossplane.io/) provider built with [Upjet](https://github.com/crossplane/upjet) that exposes XRM-conformant managed resources for the [ArubaCloud](https://www.cloud.it/) API.
 
+All managed resources are **namespace-scoped** and require Crossplane v2.x.
+
 ## Overview
 
 This provider lets you manage ArubaCloud infrastructure declaratively via Kubernetes. All 25 ArubaCloud resource types are supported, including compute, networking, storage, databases, containers, and security.
@@ -18,7 +20,7 @@ This provider lets you manage ArubaCloud infrastructure declaratively via Kubern
 
 ## Prerequisites
 
-- Kubernetes cluster with [Crossplane](https://docs.crossplane.io/latest/software/install/) v2.x installed
+- Kubernetes cluster with [Crossplane](https://docs.crossplane.io/latest/software/install/) **v2.x** installed (v2.x is required; managed resources are namespace-scoped)
 - ArubaCloud account with OAuth2 client credentials (`client_id` + `client_secret`)
 
 ## Install
@@ -32,7 +34,7 @@ kubectl apply -f examples/install.yaml
 Or using the Crossplane CLI:
 
 ```bash
-crossplane xpkg install provider ghcr.io/arubacloud/provider-arubacloud:v0.3.0
+crossplane xpkg install provider ghcr.io/arubacloud/provider-arubacloud:v0.0.8
 ```
 
 ## Quickstart
@@ -65,14 +67,14 @@ spec:
 ```
 
 ```bash
-kubectl apply -f examples/cluster/providerconfig/providerconfig.yaml
+kubectl apply -f examples/namespaced/providerconfig/providerconfig.yaml
 ```
 
 ### 3. Create a Project and VPC
 
 ```bash
-kubectl apply -f examples/cluster/arubacloud/project.yaml
-kubectl apply -f examples/cluster/arubacloud/vpc.yaml
+kubectl apply -f examples/namespaced/arubacloud/project.yaml
+kubectl apply -f examples/namespaced/arubacloud/vpc.yaml
 ```
 
 Wait for resources to become ready:
@@ -84,11 +86,11 @@ kubectl get project,vpc
 ### 4. Launch a CloudServer
 
 ```bash
-kubectl apply -f examples/cluster/arubacloud/keypair.yaml
-kubectl apply -f examples/cluster/arubacloud/subnet.yaml
-kubectl apply -f examples/cluster/arubacloud/elasticip.yaml
-kubectl apply -f examples/cluster/arubacloud/blockstorage.yaml
-kubectl apply -f examples/cluster/arubacloud/cloudserver.yaml
+kubectl apply -f examples/namespaced/arubacloud/keypair.yaml
+kubectl apply -f examples/namespaced/arubacloud/subnet.yaml
+kubectl apply -f examples/namespaced/arubacloud/elasticip.yaml
+kubectl apply -f examples/namespaced/arubacloud/blockstorage.yaml
+kubectl apply -f examples/namespaced/arubacloud/cloudserver.yaml
 ```
 
 ## Documentation
@@ -108,7 +110,7 @@ kubectl apply -f examples/cluster/arubacloud/cloudserver.yaml
 
 ## Examples
 
-Complete example manifests for all resources live in `examples/cluster/arubacloud/`.
+Complete example manifests for all resources live in `examples/namespaced/arubacloud/`.
 
 ## KaaS (Kubernetes as a Service)
 
@@ -121,7 +123,7 @@ spec:
     namespace: default
 ```
 
-See [examples/cluster/arubacloud/kaas.yaml](examples/cluster/arubacloud/kaas.yaml).
+See [examples/namespaced/arubacloud/kaas.yaml](examples/namespaced/arubacloud/kaas.yaml).
 
 ## Importing existing resources
 

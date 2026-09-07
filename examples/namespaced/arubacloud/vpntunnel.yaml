@@ -1,0 +1,49 @@
+apiVersion: arubacloud.crossplane.io/v1alpha1
+kind: Vpntunnel
+metadata:
+  name: site-to-site-tunnel
+  namespace: crossplane-system
+spec:
+  forProvider:
+    name: site-to-site-tunnel
+    location: ITBG-Bergamo
+    tags:
+      - crossplane
+    projectIdRef:
+      name: my-project
+    properties:
+      vpnType: Site-To-Site
+      vpnClientProtocol: ikev2
+      billingPeriod: Hour
+      ipConfigurations:
+        # VPN tunnel references by ID (not URI) inside ip_configurations.
+        vpc:
+          idRef:
+            name: main-vpc
+        subnet:
+          idRef:
+            name: private-subnet
+        publicIp:
+          idRef:
+            name: web-eip
+      vpnClientSettings:
+        ike:
+          encryption: AES256
+          hash: SHA256
+          pfs: group14
+        esp:
+          encryption: AES256
+          hash: SHA256
+          pfs: group14
+        peerClientPublicIp: "1.2.3.4"
+        # psk configures IKE identities and the pre-shared key for the tunnel.
+        # cloudSite / onPremSite are IKE identifiers (shown in the ArubaCloud control
+        # panel as "PSK ID Aruba Side" / "PSK ID On Prem Side") — they are not the key.
+        # secret is the actual pre-shared key; it is write-only (the API never returns it).
+        psk:
+          cloudSite: "aruba-side-id"
+          onPremSite: "onprem-side-id"
+          secret: "changeme"
+  providerConfigRef:
+    kind: ProviderConfig
+    name: default
