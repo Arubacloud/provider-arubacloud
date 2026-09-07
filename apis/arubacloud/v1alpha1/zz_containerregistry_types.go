@@ -60,8 +60,8 @@ type ContainerregistryInitParameters struct {
 
 type ContainerregistryNetworkInitParameters struct {
 
-	// (String) URI of the Elastic IP that exposes the registry endpoint (e.g., arubacloud_elasticip.example.uri).
-	// URI of the Elastic IP that exposes the registry endpoint (e.g., `arubacloud_elasticip.example.uri`).
+	// (String) URI of the Elastic IP that exposes the registry endpoint (e.g., arubacloud_elasticip.example.uri). It can be omitted if not necessary
+	// URI of the Elastic IP that exposes the registry endpoint (e.g., `arubacloud_elasticip.example.uri`). It can be omitted if not necessary
 	// +crossplane:generate:reference:type=github.com/arubacloud/provider-arubacloud/apis/arubacloud/v1alpha1.Elasticip
 	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("uri",true)
 	PublicIPURIRef *string `json:"publicIpUriRef,omitempty" tf:"public_ip_uri_ref,omitempty"`
@@ -119,8 +119,8 @@ type ContainerregistryNetworkInitParameters struct {
 
 type ContainerregistryNetworkObservation struct {
 
-	// (String) URI of the Elastic IP that exposes the registry endpoint (e.g., arubacloud_elasticip.example.uri).
-	// URI of the Elastic IP that exposes the registry endpoint (e.g., `arubacloud_elasticip.example.uri`).
+	// (String) URI of the Elastic IP that exposes the registry endpoint (e.g., arubacloud_elasticip.example.uri). It can be omitted if not necessary
+	// URI of the Elastic IP that exposes the registry endpoint (e.g., `arubacloud_elasticip.example.uri`). It can be omitted if not necessary
 	PublicIPURIRef *string `json:"publicIpUriRef,omitempty" tf:"public_ip_uri_ref,omitempty"`
 
 	// (String) URI of the security group controlling registry traffic (e.g., arubacloud_securitygroup.example.uri).
@@ -138,8 +138,8 @@ type ContainerregistryNetworkObservation struct {
 
 type ContainerregistryNetworkParameters struct {
 
-	// (String) URI of the Elastic IP that exposes the registry endpoint (e.g., arubacloud_elasticip.example.uri).
-	// URI of the Elastic IP that exposes the registry endpoint (e.g., `arubacloud_elasticip.example.uri`).
+	// (String) URI of the Elastic IP that exposes the registry endpoint (e.g., arubacloud_elasticip.example.uri). It can be omitted if not necessary
+	// URI of the Elastic IP that exposes the registry endpoint (e.g., `arubacloud_elasticip.example.uri`). It can be omitted if not necessary
 	// +crossplane:generate:reference:type=github.com/arubacloud/provider-arubacloud/apis/arubacloud/v1alpha1.Elasticip
 	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/v2/pkg/resource.ExtractParamPath("uri",true)
 	// +kubebuilder:validation:Optional

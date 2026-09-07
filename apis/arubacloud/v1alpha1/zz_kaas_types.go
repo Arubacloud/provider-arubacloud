@@ -116,6 +116,10 @@ type KaasNetworkObservation struct {
 	// CIDR block used for pod networking within the cluster (e.g., `10.0.3.0/24`).
 	PodCidr *string `json:"podCidr,omitempty" tf:"pod_cidr,omitempty"`
 
+	// (String) Computed by the API. Unique identifier of the security group created by the KaaS cluster. Use this value as the id input to the arubacloud_securitygroup data source to look up the full security group and obtain its URI.
+	// Computed by the API. Unique identifier of the security group created by the KaaS cluster. Use this value as the `id` input to the `arubacloud_securitygroup` data source to look up the full security group and obtain its URI.
+	SecurityGroupID *string `json:"securityGroupId,omitempty" tf:"security_group_id,omitempty"`
+
 	// (String) Name of the security group applied to cluster nodes.
 	// Name of the security group applied to cluster nodes.
 	SecurityGroupName *string `json:"securityGroupName,omitempty" tf:"security_group_name,omitempty"`
