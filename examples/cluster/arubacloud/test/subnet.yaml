@@ -26,5 +26,5 @@ spec:
     vpcIdRef:
       name: main-vpc
   providerConfigRef:
-    kind: ClusterProviderConfig
+    kind: ProviderConfig
     name: default

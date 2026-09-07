@@ -38,5 +38,5 @@ spec:
 
   # status.atProvider.privateIp is populated once the server is provisioned (since v1.1.0).
   providerConfigRef:
-    kind: ClusterProviderConfig
+    kind: ProviderConfig
     name: default

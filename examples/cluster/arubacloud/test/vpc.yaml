@@ -12,5 +12,5 @@ spec:
     projectIdRef:
       name: my-project
   providerConfigRef:
-    kind: ClusterProviderConfig
+    kind: ProviderConfig
     name: default

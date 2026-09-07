@@ -19,5 +19,5 @@ spec:
     name: appuser-connection
     namespace: default
   providerConfigRef:
-    kind: ClusterProviderConfig
+    kind: ProviderConfig
     name: default

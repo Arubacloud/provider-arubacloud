@@ -38,5 +38,5 @@ spec:
       concurrentUsersFlavor: Small
 
   providerConfigRef:
-    kind: ClusterProviderConfig
+    kind: ProviderConfig
     name: default

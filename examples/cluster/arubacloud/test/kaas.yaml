@@ -44,5 +44,5 @@ spec:
     namespace: default
 
   providerConfigRef:
-    kind: ClusterProviderConfig
+    kind: ProviderConfig
     name: default

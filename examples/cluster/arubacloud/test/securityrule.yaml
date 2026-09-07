@@ -21,7 +21,7 @@ spec:
         kind: Ip
         value: "0.0.0.0/0"
   providerConfigRef:
-    kind: ClusterProviderConfig
+    kind: ProviderConfig
     name: default
 ---
 apiVersion: arubacloud.crossplane.io/v1alpha1
@@ -46,7 +46,7 @@ spec:
         kind: Ip
         value: "0.0.0.0/0"
   providerConfigRef:
-    kind: ClusterProviderConfig
+    kind: ProviderConfig
     name: default
 ---
 apiVersion: arubacloud.crossplane.io/v1alpha1
@@ -71,7 +71,7 @@ spec:
         kind: Ip
         value: "0.0.0.0/0"
   providerConfigRef:
-    kind: ClusterProviderConfig
+    kind: ProviderConfig
     name: default
 ---
 apiVersion: arubacloud.crossplane.io/v1alpha1
@@ -96,7 +96,7 @@ spec:
         kind: Ip
         value: "0.0.0.0/0"
   providerConfigRef:
-    kind: ClusterProviderConfig
+    kind: ProviderConfig
     name: default
 ---
 apiVersion: arubacloud.crossplane.io/v1alpha1
@@ -122,5 +122,5 @@ spec:
         kind: Ip
         value: "0.0.0.0/0"
   providerConfigRef:
-    kind: ClusterProviderConfig
+    kind: ProviderConfig
     name: default

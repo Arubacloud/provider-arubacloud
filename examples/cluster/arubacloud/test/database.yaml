@@ -10,5 +10,5 @@ spec:
     dbaasIdRef:
       name: my-db-cluster
   providerConfigRef:
-    kind: ClusterProviderConfig
+    kind: ProviderConfig
     name: default
