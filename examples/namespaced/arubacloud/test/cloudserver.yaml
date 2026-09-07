@@ -37,7 +37,10 @@ spec:
       bootVolumeUriRefRef:
         name: boot-vol
 
-  # status.atProvider.privateIp is populated once the server is provisioned (since v1.1.0).
+  # private_ip is written to the connection secret once the server is provisioned.
+  # Read it with: kubectl get secret web-01-connection -o jsonpath='{.data.private_ip}' | base64 -d
+  writeConnectionSecretToRef:
+    name: web-01-connection
   providerConfigRef:
     kind: ProviderConfig
     name: default

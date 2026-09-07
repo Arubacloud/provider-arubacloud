@@ -124,6 +124,13 @@ func configureCloudServer(p *ujconfig.Provider) {
 			TerraformName: tfBlockStorage,
 			Extractor:     uriExtractor,
 		}
+		r.Sensitive.AdditionalConnectionDetailsFn = func(attr map[string]any) (map[string][]byte, error) {
+			conn := map[string][]byte{}
+			if ip, ok := attr["private_ip"].(string); ok && ip != "" {
+				conn["private_ip"] = []byte(ip)
+			}
+			return conn, nil
+		}
 	})
 }
 
